@@ -1,7 +1,7 @@
 
 class Case {
 
-	// Coordonnées de la case 
+	// Coordonnées de la case
 	private int i_;
 	private int j_;
 
@@ -14,12 +14,17 @@ class Case {
 	   "B" : couleur 2
 	 */
 	private char couleur_;
+
 	/* " " : case quelconque
 	   "*" : case de départ
-	 */  
+	 */
 	private char typeCase_;
 
-	public Case(int i, int j, char col, char type) {
+	// Donne le nombre d'étoiles en local, seule la racine
+	// contient le bon nombre d'étoiles dans la composante
+	private int etoile_;
+
+	public Case(int i, int j, char col, char type, int etoiles) {
 
 		i_ = i;
 		j_ = j;
@@ -28,6 +33,8 @@ class Case {
 
 		couleur_ = col;
 		typeCase_ = type;
+
+		etoile_ = etoiles;
 
 	}
 
@@ -54,6 +61,9 @@ class Case {
 
 	public char getTypeCase() { return typeCase_; }
 	public void setTypeCase(char type) { typeCase_ = type; }
+
+	public int getNbEtoiles() { return etoile_; }
+	public void addEtoiles(int n) { etoile_ += n; }
 
 
 }

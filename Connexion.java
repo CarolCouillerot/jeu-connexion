@@ -17,14 +17,14 @@ class Connexion {
 
 		Connexion game = new Connexion(reader.nextInt());
 
-		char joueur[] = new char[2]; 
+		char joueur[] = new char[2];
 		joueur[0] = 'B';
 		joueur[1] = 'R';
 		int numJoueur = 0;
 
 		game.afficherPlateau();
 
-		for(int i =0; i < 10; ++i) {
+		for(int i =0; i < 20; ++i) {
 			game.menu(reader, joueur[numJoueur]);
 			game.afficherPlateau();
 			numJoueur = (numJoueur+1)%2;
@@ -57,7 +57,7 @@ class Connexion {
 			case 5: nbEtoiles(reader,joueur);
 				break;
 			default: System.out.println("erreur.");
-							menu(reader, joueur); 
+							menu(reader, joueur);
 		}
 	}
 
@@ -85,7 +85,7 @@ class Connexion {
 		if(plat_.existeCheminCases(plat_.getCase(xdep,ydep),plat_.getCase(xbut,ybut))) {
 			System.out.println("Chemin existe");
 		}
-		
+
 	}
 
 	public void distance(Scanner reader, char joueur) {
@@ -98,10 +98,9 @@ class Connexion {
 	}
 
 	public void nbEtoiles(Scanner reader, char joueur) {
-		System.out.println("Existe chemin : entrer coord case ");
+		System.out.println("Entrer coord case ");
 		int x1 = reader.nextInt();
 		int y1 = reader.nextInt();
 		System.out.println("Nb étoiles : " + plat_.nombreEtoiles(plat_.getCase(x1,y1)));
 	}
 }
-

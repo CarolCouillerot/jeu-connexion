@@ -24,7 +24,7 @@ class Plateau {
 		for(int i = 0; i < taille; ++i) {
 			for(int j = 0; j < taille; ++j) {
 
-				plateau_[i][j] = new Case(i,j,'V',' ');
+				plateau_[i][j] = new Case(i,j,'V',' ', 0);
 			}
 		}
 
@@ -55,13 +55,12 @@ class Plateau {
 				}
 		}
 
-		for(int i = 0; i < K; ++i) { 
-			plateau_[x[i]][y[i]].setCouleur(col); 
+		for(int i = 0; i < K; ++i) {
+			plateau_[x[i]][y[i]].setCouleur(col);
 			plateau_[x[i]][y[i]].setTypeCase('*');
+			plateau_[x[i]][y[i]].addEtoiles(1);
 		}
 	}
-
-
 
 	public void colorerCase(int x, int y, char col) {
 		plateau_[x][y].setCouleur(col);
@@ -115,8 +114,7 @@ class Plateau {
 	public Case classe(int i, int j) {
 		int a = plateau_[i][j].getXParent();
 		int b = plateau_[i][j].getYParent();
-		if( (i == a && j == b) || plateau_[i][j].getTypeCase() == '*')
-
+		if(i == a && j == b)
 			return plateau_[i][j];
 		else {
 			plateau_[i][j].setParent(classe(a,b));
@@ -126,33 +124,31 @@ class Plateau {
 
 
 	public int nombreEtoiles(Case c) {
-		ArrayList<Case> composante = new ArrayList<Case>();
-		int nbEtoiles = 0;
+		Case racine = classe(c.getX(), c.getY());
 
-		afficheComposanteRec(plateau_[c.getX()][c.getY()]	, composante);
-		for(Case tmp : composante) {
-			if(tmp.getTypeCase() == '*')
-				++nbEtoiles;
-		}
-	
-		return nbEtoiles;
+		return racine.getNbEtoiles();
 	}
 
 	public void union(Case c1, Case c2) {
 		c1 = classe(c1.getX(), c1.getY());
 		c2 = classe(c2.getX(), c2.getY());
-		if( taille(c1) < taille(c2) )
-			c2.setParent(c1);
-		else
+
+		if( taille(c1) < taille(c2)) {
 			c1.setParent(c2);
+			c2.addEtoiles(c1.getNbEtoiles());
+		}
+		else {
+			c2.setParent(c1);
+			c1.addEtoiles(c2.getNbEtoiles());
+		}
 	}
 
 	public ArrayList<Case> voisins(int i, int j) {
 		ArrayList<Case> v = new ArrayList<Case>();
-		
-		if( i-1 >= 0 ) 
+
+		if( i-1 >= 0 )
 			v.add( plateau_[i-1][j] );
-		if( i+1 < taille_ )	
+		if( i+1 < taille_ )
 			v.add( plateau_[i+1][j] );
 		if( j-1 >= 0 )
 			v.add( plateau_[i][j-1] );
@@ -186,7 +182,7 @@ class Plateau {
 	public boolean existeCheminCotes(char couleur) {
 		ArrayList<Case> cote1 = new ArrayList<Case>();
 		ArrayList<Case> cote2 = new ArrayList<Case>();
-		
+
 		if( couleur == 'x') {
 			for(int j=0; j<taille_; ++j) {
 				if(plateau_[0][j].getCouleur() == 'x')
@@ -238,7 +234,7 @@ class Plateau {
 		ArrayList<Case> aTester = new ArrayList<Case>();
 		int poids[][] = new int[taille_][taille_];
 		boolean dejaTeste[][] = new boolean[taille_][taille_];
-		char coul = plateau_[x1][y1].getCouleur();		
+		char coul = plateau_[x1][y1].getCouleur();
 		int ajout;
 
 		for(int i = 0; i < taille_; ++i) {
@@ -247,7 +243,7 @@ class Plateau {
 			}
 		}
 
-		aTester.add(new Case(x1,y1,'V',' '));
+		aTester.add(new Case(x1,y1,'V',' ',0));
 
 		while ( !aTester.isEmpty() ) {
 			Case case_courante = aTester.get(0);
@@ -264,10 +260,10 @@ class Plateau {
 					}
 					else {
 						ajout = 0;
-						if( v.getCouleur() == ' ' ) { 
+						if( v.getCouleur() == ' ' ) {
 							++ajout;
 							aTester.add(v);
-						} 
+						}
 						else {
 							aTester.add(0,v);
 						}
@@ -301,9 +297,9 @@ class Plateau {
 	public void afficheTab(int tab[][]){
 		for(int i=0; i<taille_; ++i) {
 			for(int j=0; j<taille_; ++j) {
-				
+
 				System.out.print( tab[i][j]+ "|");
-				
+
 			}
 			System.out.println();
 		}
@@ -317,5 +313,3 @@ class Plateau {
 
 
 }
-
-
