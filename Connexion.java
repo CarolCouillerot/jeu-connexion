@@ -12,7 +12,6 @@ class Connexion {
 	}
 
 	public static void main(String[] args) {
-		
 		Scanner reader = new Scanner(System.in);
 		System.out.println("Taille du plateau : ");
 
@@ -30,21 +29,6 @@ class Connexion {
 			game.afficherPlateau();
 			numJoueur = (numJoueur+1)%2;
 		}
-
-		
-		/*
-		for(int i=0; i<6; ++i) {
-			game.getPlateau().ajoutePion('x',i,3);
-		}
-		game.getPlateau().afficher();
-		game.getPlateau().afficheComposante(0,3);
-		
-		System.out.println("chemin cote ?"+game.getPlateau().existeCheminCotes('x'));
-
-		System.out.println("Pion (2,4) relie composante ?"+game.getPlateau().relieComposantes('x',2,4));
-		System.out.println("nb de pions entre (2,1) et (1,4): "+game.getPlateau().calculeDistance(1,1,5,2));
-		*/
-		
 	}
 
 	public Plateau getPlateau() { return plat_; }
@@ -97,6 +81,7 @@ class Connexion {
 		int ydep = reader.nextInt();
 		int xbut = reader.nextInt();
 		int ybut = reader.nextInt();
+
 		if(plat_.existeCheminCases(plat_.getCase(xdep,ydep),plat_.getCase(xbut,ybut))) {
 			System.out.println("Chemin existe");
 		}
@@ -119,3 +104,4 @@ class Connexion {
 		System.out.println("Nb étoiles : " + plat_.nombreEtoiles(plat_.getCase(x1,y1)));
 	}
 }
+

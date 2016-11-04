@@ -20,12 +20,15 @@ class Case {
 	private char typeCase_;
 
 	public Case(int i, int j, char col, char type) {
+
 		i_ = i;
 		j_ = j;
 		ip_ = i;
 		jp_ = j;
+
 		couleur_ = col;
 		typeCase_ = type;
+
 	}
 
 
@@ -48,7 +51,9 @@ class Case {
 	public char getCouleur() { return couleur_; }
 	public void setCouleur(char c) { couleur_ = c; }
 
+
 	public char getTypeCase() { return typeCase_; }
 	public void setTypeCase(char type) { typeCase_ = type; }
+
 
 }

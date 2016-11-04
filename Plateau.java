@@ -10,6 +10,7 @@ class Plateau {
 	public static final String BG_DEFAULT = "\u001B[49m";
 	public static final String BG_LIGHTBLUE = "\u001B[104m";
 	public static final String BG_LIGHTGREY = "\u001B[47m";
+
 	public static final String BG_RED = "\u001B[41m";
 
 	// Nombres de cases par joueur au départ
@@ -17,10 +18,12 @@ class Plateau {
 
 	public Plateau(int taille) {
 
+
 		taille_ = taille;
 		plateau_ = new Case[taille][taille];
 		for(int i = 0; i < taille; ++i) {
 			for(int j = 0; j < taille; ++j) {
+
 				plateau_[i][j] = new Case(i,j,'V',' ');
 			}
 		}
@@ -35,6 +38,7 @@ class Plateau {
 		int x[] = new int[K];
 		int y[] = new int[K];
 		for(int i = 0; i < K; ++i) {
+
 			x[i] = rand.nextInt(taille_);
 			y[i] = rand.nextInt(taille_);
 		}
@@ -50,11 +54,13 @@ class Plateau {
 					}
 				}
 		}
+
 		for(int i = 0; i < K; ++i) { 
 			plateau_[x[i]][y[i]].setCouleur(col); 
 			plateau_[x[i]][y[i]].setTypeCase('*');
 		}
 	}
+
 
 
 	public void colorerCase(int x, int y, char col) {
@@ -64,6 +70,7 @@ class Plateau {
 	public boolean ajoutePion(char p, int i, int j) {
 		boolean possible = false;
 		if ( plateau_[i][j].getCouleur() == 'V' ) {
+
 			possible = true;
 			plateau_[i][j].setCouleur(p);
 			for( Case v : voisins(i, j) ) {
@@ -104,16 +111,19 @@ class Plateau {
 			return 1 + taille(plateau_[c.getXParent()][c.getYParent()]);
 	}
 
+
 	public Case classe(int i, int j) {
 		int a = plateau_[i][j].getXParent();
 		int b = plateau_[i][j].getYParent();
 		if( (i == a && j == b) || plateau_[i][j].getTypeCase() == '*')
+
 			return plateau_[i][j];
 		else {
 			plateau_[i][j].setParent(classe(a,b));
 			return plateau_[a][b];
 		}
 	}
+
 
 	public int nombreEtoiles(Case c) {
 		ArrayList<Case> composante = new ArrayList<Case>();
@@ -168,7 +178,11 @@ class Plateau {
 		}
 		return res;
 	}
+
 /*
+=======
+
+>>>>>>> 4121d8201faef7893a5f3daaed080775e0ae82c7
 	public boolean existeCheminCotes(char couleur) {
 		ArrayList<Case> cote1 = new ArrayList<Case>();
 		ArrayList<Case> cote2 = new ArrayList<Case>();
@@ -204,7 +218,9 @@ class Plateau {
 			}
 		}
 		return existeChemin;
+<<<<<<< HEAD
 	}*/
+
 
 	public boolean relieComposantes(char couleur, int i, int j) {
 		ArrayList<Case> voisins = voisins(i,j);
@@ -232,6 +248,7 @@ class Plateau {
 		}
 
 		aTester.add(new Case(x1,y1,'V',' '));
+
 		while ( !aTester.isEmpty() ) {
 			Case case_courante = aTester.get(0);
 			aTester.remove(0);
@@ -241,6 +258,7 @@ class Plateau {
 			for( Case v : voisin) {
 				if( !dejaTeste[v.getX()][v.getY()] && !aTester.contains(v)) {
 					if( v.getCouleur() != 'V' && v.getCouleur() != coul) {
+
 						dejaTeste[v.getX()][v.getY()] = true;
 						poids[v.getX()][v.getY()] = -1;
 					}
