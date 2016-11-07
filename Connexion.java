@@ -95,6 +95,8 @@ class Connexion {
 		int x2 = reader.nextInt();
 		int y2 = reader.nextInt();
 		//plat_.calculeDistance(x1,y1,x2,y2);
+		plat_.dijkstra(x1, y1, x2, y2);
+
 	}
 
 	public void nbEtoiles(Scanner reader, char joueur) {

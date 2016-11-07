@@ -16,6 +16,7 @@ class Plateau {
 	// Nombres de cases par joueur au départ
 	public static final int K = 2;
 
+
 	public Plateau(int taille) {
 
 
@@ -267,70 +268,60 @@ class Plateau {
 
 
 
-	private void dijkstra(int xdep, int ydep, int xbut, int ybut) {
+	public void dijkstra(int xdep, int ydep, int xbut, int ybut) 
+	{
 		int poids[][] = new int[taille_][taille_];
 		boolean dejaVisite[][] = new boolean[taille_][taille_];
 		Case predecesseur[][] = new Case[taille_][taille_];
 
-		initDijkstra(poids, dejaVisite, predecesseur, taille_);
+		initDijkstra(poids, dejaVisite, predecesseur, xdep, ydep);
 
-		boolean tousVisite = false;
-		Case courante = plateau_[xdep][ydep];
+		afficheTab(poids);
+
+		Case courante;
 		ArrayList<Case> voisins = new ArrayList<Case>();
 
-		//while(!tousVisite) {
+		int j = 0;
 
-/*			voisins = voisins(caseCourante.getX(), caseCourante.getY());
-			for(Case v : voisins) {
-				setPoids(poids,dejaVisite,predecesseur,caseCourante, v);
-			}
-*/			
-			int j = 0;
-			for (int k = 0; k < taille_; ++k)
+		for (int k = 0; k < taille_; ++k)
+		{
+			for (int l = 0; l < taille_; ++l)
 			{
-				for (int l = 0; l < taille_; ++l)
+				if(poids[k][l] == j)
 				{
-					if(poids[k][l] == j){
-						voisins = voisins(k, l);
-						for(Case v : voisins) 
-						{
-							setPoids(poids,dejaVisite,predecesseur,caseCourante, v);
-						}
+					voisins = voisins(k, l);
+					courante = plateau_[k][l];
+					for(Case v : voisins) 
+					{
+						setPoids(poids, dejaVisite, predecesseur, courante, v);
 					}
-					++j;
 				}
-			}
-
-			afficheTab(poids);
-
-			/*int i = 0;
-			while(dejaVisite[i]) { ++i; }
-			if(i == taille) tousVisite = true; */
-		//}
-
-	}
-
-	private void initDijkstra(int poids[][], boolean dejaVisite[][], Case predecesseur[][], int taille, int xdep, int ydep) {
-
-		for(int i = 0; i < taille; ++i) {
-			for(int j = 0; j < taille; ++j ) {
-				poids[i][j] = -1;  // poids
-				dejaVisite[i][j] = false; // deja passé par cette case
-				predecesseur[i][j] = null; // tableau des prédécesseurs
+				++j;
 			}
 		}
+		afficheTab(poids);
+	}
 
+	private void initDijkstra(int poids[][], boolean dejaVisite[][], Case predecesseur[][], int xdep, int ydep)
+	{
+		for (int i = 0; i < taille_; ++i)
+		{
+			for (int j = 0; j < taille_; ++j)
+			{
+				poids[i][j] = -1;	// distance a dep
+				dejaVisite[i][j] = false;	// deja passé par cette case
+				predecesseur[i][j] = null;	// tableau des prédécesseurs
+			}
+		}
 		poids[xdep][ydep] = 0;
 	}
 
-	private void setPoids(int poids[][], boolean dejaVisite[][], Case predecesseur[][], Case courante, Case voisine) {
-		
-		if( (poids[courante.getX()][courante.getY()] < poids[voisine.getX()][voisine.getY()] + 1) || !dejaVisite[voisine.getX()][voisine.getY()] ){
-			
+	private void setPoids(int poids[][], boolean dejaVisite[][], Case predecesseur[][], Case courante, Case voisine)
+	{	
+		if ((poids[courante.getX()][courante.getY()] < poids[voisine.getX()][voisine.getY()] + 1) || !dejaVisite[voisine.getX()][voisine.getY()])
+		{
 			poids[voisine.getX()][voisine.getY()] = poids[courante.getX()][courante.getY()] + 1;
 			predecesseur[voisine.getX()][voisine.getY()] = courante;
-		
 		}
 	}
-
 }
