@@ -230,51 +230,6 @@ class Plateau {
 		return (nbVoisinsMemeCouleur >= 2);
 	}
 
-	public int calculeDistance(int x1, int y1, int x2, int y2) {
-		ArrayList<Case> aTester = new ArrayList<Case>();
-		int poids[][] = new int[taille_][taille_];
-		boolean dejaTeste[][] = new boolean[taille_][taille_];
-		char coul = plateau_[x1][y1].getCouleur();
-		int ajout;
-
-		for(int i = 0; i < taille_; ++i) {
-			for(int j = 0; j < taille_; ++j) {
-				dejaTeste[i][j] = false;
-			}
-		}
-
-		aTester.add(new Case(x1,y1,'V',' ',0));
-
-		while ( !aTester.isEmpty() ) {
-			Case case_courante = aTester.get(0);
-			aTester.remove(0);
-			dejaTeste[case_courante.getX()][case_courante.getY()] = true;
-
-			ArrayList<Case> voisin = voisins(case_courante.getX(), case_courante.getY() );
-			for( Case v : voisin) {
-				if( !dejaTeste[v.getX()][v.getY()] && !aTester.contains(v)) {
-					if( v.getCouleur() != 'V' && v.getCouleur() != coul) {
-
-						dejaTeste[v.getX()][v.getY()] = true;
-						poids[v.getX()][v.getY()] = -1;
-					}
-					else {
-						ajout = 0;
-						if( v.getCouleur() == ' ' ) {
-							++ajout;
-							aTester.add(v);
-						}
-						else {
-							aTester.add(0,v);
-						}
-						poids[v.getX()][v.getY()] = ajout + poids[case_courante.getX()][case_courante.getY()];
-					}
-				}
-			}
-		}
-		afficheTab(poids);
-		return poids[x2][y2];
-	}
 
 	public Case getCase(int i, int j) { return plateau_[i][j]; }
 
@@ -311,5 +266,71 @@ class Plateau {
 	public int getTaille() { return taille_; }
 
 
+
+	private void dijkstra(int xdep, int ydep, int xbut, int ybut) {
+		int poids[][] = new int[taille_][taille_];
+		boolean dejaVisite[][] = new boolean[taille_][taille_];
+		Case predecesseur[][] = new Case[taille_][taille_];
+
+		initDijkstra(poids, dejaVisite, predecesseur, taille_);
+
+		boolean tousVisite = false;
+		Case courante = plateau_[xdep][ydep];
+		ArrayList<Case> voisins = new ArrayList<Case>();
+
+		//while(!tousVisite) {
+
+/*			voisins = voisins(caseCourante.getX(), caseCourante.getY());
+			for(Case v : voisins) {
+				setPoids(poids,dejaVisite,predecesseur,caseCourante, v);
+			}
+*/			
+			int j = 0;
+			for (int k = 0; k < taille_; ++k)
+			{
+				for (int l = 0; l < taille_; ++l)
+				{
+					if(poids[k][l] == j){
+						voisins = voisins(k, l);
+						for(Case v : voisins) 
+						{
+							setPoids(poids,dejaVisite,predecesseur,caseCourante, v);
+						}
+					}
+					++j;
+				}
+			}
+
+			afficheTab(poids);
+
+			/*int i = 0;
+			while(dejaVisite[i]) { ++i; }
+			if(i == taille) tousVisite = true; */
+		//}
+
+	}
+
+	private void initDijkstra(int poids[][], boolean dejaVisite[][], Case predecesseur[][], int taille, int xdep, int ydep) {
+
+		for(int i = 0; i < taille; ++i) {
+			for(int j = 0; j < taille; ++j ) {
+				poids[i][j] = -1;  // poids
+				dejaVisite[i][j] = false; // deja passé par cette case
+				predecesseur[i][j] = null; // tableau des prédécesseurs
+			}
+		}
+
+		poids[xdep][ydep] = 0;
+	}
+
+	private void setPoids(int poids[][], boolean dejaVisite[][], Case predecesseur[][], Case courante, Case voisine) {
+		
+		if( (poids[courante.getX()][courante.getY()] < poids[voisine.getX()][voisine.getY()] + 1) || !dejaVisite[voisine.getX()][voisine.getY()] ){
+			
+			poids[voisine.getX()][voisine.getY()] = poids[courante.getX()][courante.getY()] + 1;
+			predecesseur[voisine.getX()][voisine.getY()] = courante;
+		
+		}
+	}
 
 }
