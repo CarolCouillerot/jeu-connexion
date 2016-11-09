@@ -124,17 +124,13 @@ class Plateau {
 	}
 
 
-	public int nombreEtoiles(Case c) {
-		Case racine = classe(c.getX(), c.getY());
-
-		return racine.getNbEtoiles();
-	}
-
 	public void union(Case c1, Case c2) {
+		int taille1 = taille(c1);
+		int taille2 = taille(c2);
 		c1 = classe(c1.getX(), c1.getY());
 		c2 = classe(c2.getX(), c2.getY());
 
-		if( taille(c1) < taille(c2)) {
+		if( taille1 < taille2) {
 			c1.setParent(c2);
 			c2.addEtoiles(c1.getNbEtoiles());
 		}
@@ -165,6 +161,37 @@ class Plateau {
 			v.add( plateau_[i+1][j+1]);
 
 		return v;
+	}
+
+	public int nombreEtoiles(Case c) {
+		Case racine = classe(c.getX(), c.getY());
+
+		return racine.getNbEtoiles();
+	}
+
+	public int max(int a, int b) {
+		return (a > b) ? a : b;
+	}
+
+	public void afficherScore() {
+		int etoileBleue = 0;
+		int etoileRouge = 0;
+
+		for(int i = 0; i < taille_; ++i) {
+			for(int j = 0; j < taille_; ++j) {
+				if(plateau_[i][j].getCouleur() == 'B') 
+					etoileBleue = max(etoileBleue, nombreEtoiles(plateau_[i][j]));
+				else if(plateau_[i][j].getCouleur() == 'R')
+					etoileRouge = max(etoileRouge, nombreEtoiles(plateau_[i][j]));
+			}
+		}
+
+		if(etoileRouge > etoileBleue)
+			System.out.println("Le joueur rouge est devant avec "+etoileRouge+" etoiles connectées contre "+etoileBleue+" etoiles pour bleu");
+		else if(etoileBleue > etoileRouge)
+			System.out.println("Le joueur bleu est devant avec "+etoileBleue+" etoiles connectées contre "+etoileRouge+" etoiles pour rouge");
+		else
+			System.out.println("Egalite avec "+etoileBleue+" etoiles pour chacun");
 	}
 
 	public boolean existeCheminCases(Case c1, Case c2) {
@@ -276,6 +303,77 @@ class Plateau {
 
 		initDijkstra(poids, dejaVisite, predecesseur, xdep, ydep);
 
+		boolean tousVisite = false;
+		Case courante;
+		while(!tousVisite) {
+			courante = trouverMin(dejaVisite,poids);
+			dejaVisite[courante.getX()][courante.getY()] = true;
+			for(Case v : voisins(courante.getX(), courante.getY()))
+				setDistance(courante,v,predecesseur,poids);
+			tousVisite = true;
+			for(int i = 0; i < taille_; ++i) {
+				for(int j = 0; j < taille_; ++j) {
+					if(!dejaVisite[i][j]) tousVisite = false;
+				}
+			}
+		}
+		afficheTab(poids);
+	}
+
+	private void initDijkstra(int poids[][], boolean dejaVisite[][], Case predecesseur[][], int xdep, int ydep)
+	{
+		char col = plateau_[xdep][ydep].getCouleur();
+		for (int i = 0; i < taille_; ++i)
+		{
+			for (int j = 0; j < taille_; ++j) {
+				poids[i][j] = Integer.MAX_VALUE; // distance a dep
+				if(plateau_[i][j].getCouleur() != col && plateau_[i][j].getCouleur() != 'V')
+					dejaVisite[i][j] = true;
+				else
+					dejaVisite[i][j] = false;
+				predecesseur[i][j] = null;
+			}
+
+		}
+		poids[xdep][ydep] = 0;
+	}
+
+	private Case trouverMin(boolean dejaVisite[][] , int poids[][]) {
+		int min = Integer.MAX_VALUE;
+		Case sommet = new Case(-1,-1,' ',' ',0);
+
+		for(int i = 0; i < taille_; ++i) { 
+			for(int j = 0; j < taille_; ++j) {
+				if(!dejaVisite[i][j] && poids[i][j] < min) {
+					min = poids[i][j];
+					sommet = plateau_[i][j];
+				}
+			}
+		}
+
+		return sommet;
+	}
+
+	private void setDistance(Case c1, Case c2, Case predecesseur[][], int poids[][]) {
+		int x1 = c1.getX(), y1 = c1.getY();
+		int x2 = c2.getX(), y2 = c2.getY();
+		if(poids[x2][y2] > poids[x1][y1] + 1 ) {
+			poids[x2][y2] = poids[x1][y1] + 1;
+			predecesseur[x2][y2] = plateau_[x1][y1];
+		}
+	}
+
+}
+
+/*
+public void dijkstra(int xdep, int ydep, int xbut, int ybut) 
+	{
+		int poids[][] = new int[taille_][taille_];
+		boolean dejaVisite[][] = new boolean[taille_][taille_];
+		Case predecesseur[][] = new Case[taille_][taille_];
+
+		initDijkstra(poids, dejaVisite, predecesseur, xdep, ydep);
+
 		afficheTab(poids);
 
 		Case courante;
@@ -324,4 +422,4 @@ class Plateau {
 			predecesseur[voisine.getX()][voisine.getY()] = courante;
 		}
 	}
-}
+	*/

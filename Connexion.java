@@ -41,6 +41,8 @@ class Connexion {
 		System.out.println("3. Tester l'existence de chemin");
 		System.out.println("4. Tableau des distances entre a et b");
 		System.out.println("5. nb etoiles");
+		System.out.println("6. Score des joueurs");
+		System.out.println("7. Relie composante ?");
 		System.out.println("Votre choix : ");
 
 		int choix = reader.nextInt();
@@ -55,6 +57,10 @@ class Connexion {
 			case 4: distance(reader,joueur);
 				break;
 			case 5: nbEtoiles(reader,joueur);
+				break;
+			case 6: afficherScores();
+				break;
+			case 7: relieComposante(reader,joueur);
 				break;
 			default: System.out.println("erreur.");
 							menu(reader, joueur);
@@ -105,4 +111,19 @@ class Connexion {
 		int y1 = reader.nextInt();
 		System.out.println("Nb étoiles : " + plat_.nombreEtoiles(plat_.getCase(x1,y1)));
 	}
+
+	public void afficherScores() {
+		plat_.afficherScore();
+	}
+
+	public void relieComposante(Scanner reader, char joueur) {
+		System.out.println("Entrer coord case ");
+		int x = reader.nextInt();
+		int y = reader.nextInt();
+		if(plat_.relieComposantes(joueur, x, y))
+			System.out.println("L'ajout d'un pion en ("+x+","+y+") relie bien des composantes");
+		else
+			System.out.println("L'ajout d'un pion en ("+x+","+y+") ne relie pas de composantes");
+	}
+
 }
