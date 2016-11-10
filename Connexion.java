@@ -10,7 +10,7 @@ class Connexion {
 		plat_ = new Plateau(taillePlateau);
 		taille_ = taillePlateau;
 	}
-
+/*
 	public static void main(String[] args) {
 		Scanner reader = new Scanner(System.in);
 		System.out.println("Taille du plateau : ");
@@ -30,7 +30,7 @@ class Connexion {
 			numJoueur = (numJoueur+1)%2;
 		}
 	}
-
+*/
 	public Plateau getPlateau() { return plat_; }
 
 	public void afficherPlateau() { plat_.afficher(); }
@@ -39,7 +39,7 @@ class Connexion {
 		System.out.println("1. Ajouter un pion");
 		System.out.println("2. Afficher composante");
 		System.out.println("3. Tester l'existence de chemin");
-		System.out.println("4. Tableau des distances entre a et b");
+		System.out.println("4. Distance minimale entre a et b");
 		System.out.println("5. nb etoiles");
 		System.out.println("6. Score des joueurs");
 		System.out.println("7. Relie composante ?");
@@ -101,8 +101,8 @@ class Connexion {
 		int x2 = reader.nextInt();
 		int y2 = reader.nextInt();
 		//plat_.calculeDistance(x1,y1,x2,y2);
-		plat_.dijkstra(x1, y1, x2, y2);
-
+		int min = plat_.dijkstra(x1, y1, x2, y2);
+		System.out.println("Nombres de coups min pour aller de ("+x1+","+y1+") en ("+x2+","+y2+") : " + min);
 	}
 
 	public void nbEtoiles(Scanner reader, char joueur) {

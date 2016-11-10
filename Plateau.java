@@ -1,29 +1,44 @@
 import java.util.ArrayList;
 import java.util.Random;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import javax.swing.JPanel;
 
-class Plateau {
+class Plateau extends JPanel
+{
 
-	Case plateau_[][];
-	int taille_;
+	public static final int Pix = 30;
+
+	private Case plateau_[][];
+	private Grille grille;
+	private int taille_;
+	private int largeur;
+	private int hauteur;
 
 	public static final String FG_DEFAULT = "\u001B[0m";
 	public static final String BG_DEFAULT = "\u001B[49m";
 	public static final String BG_LIGHTBLUE = "\u001B[104m";
 	public static final String BG_LIGHTGREY = "\u001B[47m";
-
 	public static final String BG_RED = "\u001B[41m";
 
 	// Nombres de cases par joueur au départ
 	public static final int K = 2;
 
-
 	public Plateau(int taille) {
-
-
+		
 		taille_ = taille;
-		plateau_ = new Case[taille][taille];
-		for(int i = 0; i < taille; ++i) {
-			for(int j = 0; j < taille; ++j) {
+
+		// Dimensions de la fenêtre
+		setPreferredSize(new Dimension(Pix*(taille_+1), Pix*(taille_+1)));
+		
+		// Grille
+		grille = new Grille(taille_);
+
+		plateau_ = new Case[taille_][taille_];
+		for(int i = 0; i < taille_; ++i) {
+			for(int j = 0; j < taille_; ++j) {
 
 				plateau_[i][j] = new Case(i,j,'V',' ', 0);
 			}
@@ -203,49 +218,6 @@ class Plateau {
 		return res;
 	}
 
-/*
-=======
-
->>>>>>> 4121d8201faef7893a5f3daaed080775e0ae82c7
-	public boolean existeCheminCotes(char couleur) {
-		ArrayList<Case> cote1 = new ArrayList<Case>();
-		ArrayList<Case> cote2 = new ArrayList<Case>();
-
-		if( couleur == 'x') {
-			for(int j=0; j<taille_; ++j) {
-				if(plateau_[0][j].getCouleur() == 'x')
-					cote1.add(plateau_[0][j]);
-				if(plateau_[taille_-1][j].getCouleur() == 'x')
-					cote2.add(plateau_[taille_-1][j]);
-			}
-		}
-		else {
-			for(int i=0; i<taille_; ++i) {
-				System.out.println(plateau_[i][0].getCouleur());
-				if(plateau_[i][0].getCouleur() == 'o')
-					cote1.add(plateau_[i][0]);
-				if(plateau_[i][taille_-1].getCouleur() == 'o')
-					cote2.add(plateau_[i][taille_-1]);
-			}
-		}
-
-		boolean existeChemin = false;
-		int i=0;
-		if( cote1.size() > 0 && cote2.size() > 0) {
-			while( i < cote1.size() && !existeChemin) {
-				int j = 0;
-				while( j < cote2.size() && !existeChemin) {
-					existeChemin = existeCheminCases(cote1.get(i), cote2.get(j));
-					++j;
-				}
-				++i;
-			}
-		}
-		return existeChemin;
-<<<<<<< HEAD
-	}*/
-
-
 	public boolean relieComposantes(char couleur, int i, int j) {
 		ArrayList<Case> voisins = voisins(i,j);
 		int nbVoisinsMemeCouleur = 0;
@@ -289,13 +261,9 @@ class Plateau {
 		System.out.println("\n");
 	}
 
-
-
 	public int getTaille() { return taille_; }
 
-
-
-	public void dijkstra(int xdep, int ydep, int xbut, int ybut) 
+	public int dijkstra(int xdep, int ydep, int xbut, int ybut) 
 	{
 		int poids[][] = new int[taille_][taille_];
 		boolean dejaVisite[][] = new boolean[taille_][taille_];
@@ -303,13 +271,18 @@ class Plateau {
 
 		initDijkstra(poids, dejaVisite, predecesseur, xdep, ydep);
 
+		char coulObstacle = ( plateau_[xdep][ydep].getCouleur() == 'R') ? 'B' : 'R';
+		
 		boolean tousVisite = false;
 		Case courante;
+		
 		while(!tousVisite) {
 			courante = trouverMin(dejaVisite,poids);
 			dejaVisite[courante.getX()][courante.getY()] = true;
-			for(Case v : voisins(courante.getX(), courante.getY()))
-				setDistance(courante,v,predecesseur,poids);
+			for(Case v : voisins(courante.getX(), courante.getY())) {
+				if(v.getCouleur() != coulObstacle)
+					setDistance(courante,v,predecesseur,poids);
+			}	
 			tousVisite = true;
 			for(int i = 0; i < taille_; ++i) {
 				for(int j = 0; j < taille_; ++j) {
@@ -317,7 +290,8 @@ class Plateau {
 				}
 			}
 		}
-		afficheTab(poids);
+		
+		return poids[xbut][ybut];
 	}
 
 	private void initDijkstra(int poids[][], boolean dejaVisite[][], Case predecesseur[][], int xdep, int ydep)
@@ -327,8 +301,10 @@ class Plateau {
 		{
 			for (int j = 0; j < taille_; ++j) {
 				poids[i][j] = Integer.MAX_VALUE; // distance a dep
-				if(plateau_[i][j].getCouleur() != col && plateau_[i][j].getCouleur() != 'V')
+				if(plateau_[i][j].getCouleur() != col && plateau_[i][j].getCouleur() != 'V') {
 					dejaVisite[i][j] = true;
+					poids[i][j] = -1;
+				}
 				else
 					dejaVisite[i][j] = false;
 				predecesseur[i][j] = null;
@@ -363,63 +339,34 @@ class Plateau {
 		}
 	}
 
-}
+	/**
+	 * Méthode publique de dessin de la grille dans la fenêtre graphique
+	 */
+	public void dessiner() {
+		repaint();  // appel de paintComponent redéfinie ci-après
+	}
 
-/*
-public void dijkstra(int xdep, int ydep, int xbut, int ybut) 
-	{
-		int poids[][] = new int[taille_][taille_];
-		boolean dejaVisite[][] = new boolean[taille_][taille_];
-		Case predecesseur[][] = new Case[taille_][taille_];
-
-		initDijkstra(poids, dejaVisite, predecesseur, xdep, ydep);
-
-		afficheTab(poids);
-
-		Case courante;
-		ArrayList<Case> voisins = new ArrayList<Case>();
-
-		int j = 0;
-
-		for (int k = 0; k < taille_; ++k)
-		{
-			for (int l = 0; l < taille_; ++l)
-			{
-				if(poids[k][l] == j)
-				{
-					voisins = voisins(k, l);
-					courante = plateau_[k][l];
-					for(Case v : voisins) 
-					{
-						setPoids(poids, dejaVisite, predecesseur, courante, v);
-					}
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Graphics2D g2d = (Graphics2D)g;
+		// fond
+		Color couleur = new Color(80, 80, 80);
+		g2d.setColor(couleur);
+		g2d.fillRect(0, 0, largeur, hauteur);
+		// superposition des couleurs
+		
+		g2d.setXORMode(couleur);
+		//grille
+		grille.dessiner(g2d);
+		super.setVisible(true);
+		//choses
+		// parcours du tableau 2D
+		for(int i = 0; i < taille_; i++){
+			for(int j = 0; j < taille_; j++){
+				if(plateau_[i][j] != null){
+					//plateau_[i][j].dessiner(g2d);
 				}
-				++j;
 			}
 		}
-		afficheTab(poids);
 	}
-
-	private void initDijkstra(int poids[][], boolean dejaVisite[][], Case predecesseur[][], int xdep, int ydep)
-	{
-		for (int i = 0; i < taille_; ++i)
-		{
-			for (int j = 0; j < taille_; ++j)
-			{
-				poids[i][j] = -1;	// distance a dep
-				dejaVisite[i][j] = false;	// deja passé par cette case
-				predecesseur[i][j] = null;	// tableau des prédécesseurs
-			}
-		}
-		poids[xdep][ydep] = 0;
-	}
-
-	private void setPoids(int poids[][], boolean dejaVisite[][], Case predecesseur[][], Case courante, Case voisine)
-	{	
-		if ((poids[courante.getX()][courante.getY()] < poids[voisine.getX()][voisine.getY()] + 1) || !dejaVisite[voisine.getX()][voisine.getY()])
-		{
-			poids[voisine.getX()][voisine.getY()] = poids[courante.getX()][courante.getY()] + 1;
-			predecesseur[voisine.getX()][voisine.getY()] = courante;
-		}
-	}
-	*/
+}

@@ -2,10 +2,12 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 
-public class Fenetre extends JFrame {
+public class Fenetre extends JFrame 
+{
 	
 
-	public Fenetre(String titre, JPanel panel) {
+	public Fenetre(String titre, JPanel panel) 
+	{
 		// instanciation de l'instance de JFrame et de son contenu
 		super(titre);
 		getContentPane().add(panel);

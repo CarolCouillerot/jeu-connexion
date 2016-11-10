@@ -65,5 +65,7 @@ class Case {
 	public int getNbEtoiles() { return etoile_; }
 	public void addEtoiles(int n) { etoile_ += n; }
 
-
+	public void dessiner() {
+		// dessiner une case
+	}
 }
