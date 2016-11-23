@@ -12,10 +12,10 @@ class Plateau extends JPanel
 	public static final int Pix = 30;
 
 	private Case plateau_[][];
-	private Grille grille;
+	private Grille grille_;
 	private int taille_;
-	private int largeur;
-	private int hauteur;
+	private int largeur_;
+	private int hauteur_;
 
 	public static final String FG_DEFAULT = "\u001B[0m";
 	public static final String BG_DEFAULT = "\u001B[49m";
@@ -34,7 +34,7 @@ class Plateau extends JPanel
 		setPreferredSize(new Dimension(Pix*(taille_+1), Pix*(taille_+1)));
 		
 		// Grille
-		grille = new Grille(taille_);
+		grille_ = new Grille(taille_);
 
 		plateau_ = new Case[taille_][taille_];
 		for(int i = 0; i < taille_; ++i) {
@@ -261,20 +261,34 @@ class Plateau extends JPanel
 		System.out.println("\n");
 	}
 
+	public void afficheTabCoord(Case tab[][]){
+		for(int i=0; i<taille_; ++i) {
+			for(int j=0; j<taille_; ++j) {
+
+				System.out.print(tab[i][j].getX()+","+tab[i][j].getY()+ "|");
+
+			}
+			System.out.println();
+		}
+		System.out.println("\n");
+	}
+
 	public int getTaille() { return taille_; }
 
-	public int dijkstra(int xdep, int ydep, int xbut, int ybut) 
+	public int[] dijkstra(int xdep, int ydep, int xbut, int ybut) 
 	{
 		int poids[][] = new int[taille_][taille_];
 		boolean dejaVisite[][] = new boolean[taille_][taille_];
 		Case predecesseur[][] = new Case[taille_][taille_];
+		// Sert à stocker la distance min, ainsi que les coordonnées du prédecesseur du but
+		int resultat[] = new int[3];
 
 		initDijkstra(poids, dejaVisite, predecesseur, xdep, ydep);
 
 		char coulObstacle = ( plateau_[xdep][ydep].getCouleur() == 'R') ? 'B' : 'R';
 		
 		boolean tousVisite = false;
-		Case courante;
+		Case courante = new Case();
 		
 		while(!tousVisite) {
 			courante = trouverMin(dejaVisite,poids);
@@ -290,8 +304,34 @@ class Plateau extends JPanel
 				}
 			}
 		}
-		
-		return poids[xbut][ybut];
+
+
+		afficheTabCoord(predecesseur);
+		int i = xbut;
+		int j = ybut;
+		int cptCol = 0;
+		char colDep = plateau_[xdep][ydep].getCouleur();
+
+		courante = plateau_[i][j];
+
+		while ((i !=xdep) || (j != ydep))
+		{
+
+			if(courante.getCouleur() == colDep)
+			{
+				++cptCol;
+			}
+
+			courante = predecesseur[i][j];
+			i = courante.getX();
+			j = courante.getY();
+			System.out.println(i+","+j);
+
+		}
+		resultat[0] = poids[xbut][ybut] - cptCol;
+		resultat[1] = predecesseur[xbut][ybut].getX();
+		resultat[2] = predecesseur[xbut][ybut].getY();
+		return resultat;
 	}
 
 	private void initDijkstra(int poids[][], boolean dejaVisite[][], Case predecesseur[][], int xdep, int ydep)
@@ -304,13 +344,16 @@ class Plateau extends JPanel
 				if(plateau_[i][j].getCouleur() != col && plateau_[i][j].getCouleur() != 'V') {
 					dejaVisite[i][j] = true;
 					poids[i][j] = -1;
+					predecesseur[i][j] = plateau_[i][j];
 				}
-				else
+				else {
 					dejaVisite[i][j] = false;
-				predecesseur[i][j] = null;
+					predecesseur[i][j] = null;
+				}
 			}
 
 		}
+		predecesseur[xdep][ydep] = plateau_[xdep][ydep];
 		poids[xdep][ydep] = 0;
 	}
 
@@ -340,26 +383,26 @@ class Plateau extends JPanel
 	}
 
 	/**
-	 * Méthode publique de dessin de la grille dans la fenêtre graphique
+	 * Méthode publique de dessin de la grille_ dans la fenêtre graphique
 	 */
 	public void dessiner() {
 		repaint();  // appel de paintComponent redéfinie ci-après
 	}
 
-	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		Graphics2D g2d = (Graphics2D)g;
+	protected void paintComponent(Graphics g2d) {
+		super.paintComponent(g2d);
+		//Graphics g2d = (Graphics2D)g;
 		// fond
 		Color couleur = new Color(80, 80, 80);
 		g2d.setColor(couleur);
-		g2d.fillRect(0, 0, largeur, hauteur);
+		g2d.fillRect(0, 0, largeur_, hauteur_);
 		// superposition des couleurs
 		
 		g2d.setXORMode(couleur);
-		//grille
-		grille.dessiner(g2d);
-		super.setVisible(true);
-		//choses
+		//grille_
+		grille_.dessiner(g2d);
+		grille_.setVisible(true);
+
 		// parcours du tableau 2D
 		for(int i = 0; i < taille_; i++){
 			for(int j = 0; j < taille_; j++){

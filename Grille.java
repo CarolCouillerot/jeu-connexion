@@ -1,8 +1,10 @@
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
+import javax.swing.JPanel;
+import javax.swing.JFrame;
 
-
-public class Grille 
+public class Grille extends JFrame
 {
 	// Dimensions de la grille : 0..N lignes et 0..M colonnes
 	private int taille_;
@@ -13,7 +15,7 @@ public class Grille
 		this.taille_ = taille;
 	}
 
-	public void dessiner(Graphics2D g2d) 
+	public void dessiner(Graphics g2d) 
 	{
 		// affichage du quadrillage
 		for(int i = 0; i < taille_; ++i) {

@@ -37,7 +37,7 @@ class Case {
 		etoile_ = etoiles;
 
 	}
-
+	public Case() {}
 
 	public int getX() { return i_; }
 	public int getY() { return j_; }
