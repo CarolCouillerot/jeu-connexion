@@ -1,92 +1,102 @@
+import java.util.ArrayList;
 
-class IABasique implements IA
+class IABasique extends IA
 {
 
 	public IABasique(char c, Plateau p) 
 	{
 		col_ = c;
 		colEnnemi_ = (c == 'R') ? 'B' : 'R';
+		etoile_ = new ArrayList<Case>();
 		for(int i = 0; i < p.getTaille(); ++i )
 		{
 			for(int j = 0; j < p.getTaille(); ++j) 
 			{
 				if(p.getCase(i,j).getCouleur() == col_ && p.getCase(i,j).getTypeCase() == '*')
-					casesEtoiles.add(p.getCase(i,j));
+					etoile_.add(p.getCase(i,j));
 			}
 		}
 
-		chemin = new int[casesEtoiles.size()][casesEtoiles.size()];
-		for(int i = 0; i < casesEtoiles.size(); ++i) 
+		chemin_ = new boolean[etoile_.size()][etoile_.size()];
+		for(int i = 0; i < etoile_.size(); ++i) 
 		{
-			for(int j = 0; j < casesEtoiles.size(); ++j)
-				chemin[i][j] = true;
+			for(int j = 0; j < etoile_.size(); ++j)
+				chemin_[i][j] = true;
 		}
 	}
 
 	public Case evaluer(Plateau p) 
 	{
-
+		return null;
 	}
 
 	private void cheminvalide(Plateau p) {
 		boolean cheminPossible = false;
-		for(int i = 0; i < casesEtoiles.size(); ++i) 
+		for(int i = 0; i < etoile_.size(); ++i) 
 		{
-			ArrayList<Case> voisins = p.voisins(casesEtoiles[i].getX(), casesEtoiles[i].getY());
+			ArrayList<Case> voisins = p.voisins(etoile_.get(i).getX(), etoile_.get(i).getY());
 			int j = 0;
 			while(j < voisins.size() && !cheminPossible)
 			{
-				if(voisins[j].getCouleur() == 'V' )
+				if(voisins.get(j).getCouleur() == 'V' )
 					cheminPossible = true;
 				++j;
 			}
 
 			if(!cheminPossible) {
-				for(int k = 0; k < casesEtoiles.size(); ++k) 
+				for(int k = 0; k < etoile_.size(); ++k) 
 				{
-					chemin[i][k] = false;
-					chemin[k][i] = false;
+					chemin_[i][k] = false;
+					chemin_[k][i] = false;
 				}
 			}
 		}
 
 	}
 
-	private int[] cheminEnCours(Plateau p) 
+	private int[] cheminEnCours(Plateau p, Dijsktra dijsktra) 
 	{
 		int coordChemin[] = new int[4];
 		int distanceMin = Integer.MAX_VALUE;
-		int dCourante[] = new int[3];
-		//int k, l;
-		for(int i = 0; i < casesEtoiles.size(); ++i) {
-			for(int j = i+1; j < casesEtoiles.size(); ++j) {
+		int dCourante;
 
-				if(chemin[i][j]) 
-				{
-					dCourante = p.dijkstra(casesEtoiles[i].getX(), casesEtoiles[i].getY(), casesEtoiles[j].getX(), casesEtoiles[j].getY());
-					if (distanceMin > dCourante[0])
-					{	
-						//k = i;
-						//l = j;
-						distanceMin = dCourante[0];
-						coordChemin[0] = casesEtoiles[i].getX();
-						coordChemin[1] = casesEtoiles[i].getY();
-						coordChemin[2] = casesEtoiles[j].getX();
-						coordChemin[3] = casesEtoiles[j].getY();
-					}
+		for(int i = 0; i < etoile_.size(); ++i) {
+			for(int j = i+1; j < etoile_.size(); ++j) {
+				dCourante = dijsktra.run(p, etoile_.get(i).getX(), etoile_.get(i).getY(), etoile_.get(j).getX(), etoile_.get(j).getY());
+				if (distanceMin > dCourante)
+				{	
+					distanceMin = dCourante;
+					coordChemin[0] = etoile_.get(i).getX();
+					coordChemin[1] = etoile_.get(i).getY();
+					coordChemin[2] = etoile_.get(j).getX();
+					coordChemin[3] = etoile_.get(j).getY();
 				}
 			}
 		}
-		//chemin[k][l] = false;
-		//chemin[l][k] = false;
 
 		return coordChemin;
 	}
+	
 
-	public void mettrePion(Plateau p) 
+	public int[] mettrePion(Plateau p, Dijsktra dijsktra) 
 	{
 		Case pion = evaluer(p);
-		ajoutePion(col_, p.getX(), p.getY());
+		int coordExtremiteChemin[] = cheminEnCours(p,dijsktra);
+		int i = coordExtremiteChemin[2];
+		int j = coordExtremiteChemin[3];
+		int tmp;
+
+		while(dijsktra.predecesseur()[i][j].getCouleur() == col_) {
+			tmp = i;
+			i = dijsktra.predecesseur()[i][j].getX();
+			j = dijsktra.predecesseur()[tmp][j].getY();
+		}
+
+		p.ajoutePion(col_, i, j);
+		int res[] = new int[2];
+		res[0] = i;
+		res[1] = j;
+		return res;
 	} 
 
 }

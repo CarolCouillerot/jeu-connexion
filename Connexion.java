@@ -5,10 +5,14 @@ class Connexion {
 
 	private Plateau plat_;
 	private int taille_;
+	private Dijsktra dijkstra_;
+	private IA ia_;
 
 	public Connexion(int taillePlateau) {
 		plat_ = new Plateau(taillePlateau);
 		taille_ = taillePlateau;
+		dijkstra_ = new Dijsktra(taillePlateau);
+		ia_ = new IABasique('R', plat_);
 	}
 
 	public static void main(String[] args) {
@@ -25,10 +29,22 @@ class Connexion {
 		game.afficherPlateau();
 
 		for(int i =0; i < 20; ++i) {
-			game.menu(reader, joueur[numJoueur]);
-			game.afficherPlateau();
+			if(numJoueur == 0) {
+				game.menu(reader, joueur[numJoueur]);
+				game.afficherPlateau();
+			}
+			else {
+				game.tourIA();
+			}
 			numJoueur = (numJoueur+1)%2;
 		}
+	}
+
+	public void tourIA() {
+		int res[] = new int[2];
+
+		res = ia_.mettrePion(plat_, dijkstra_);
+		plat_.ajoutePion(ia_.color(), res[0], res[1]);
 	}
 
 	public Plateau getPlateau() { return plat_; }
@@ -101,6 +117,7 @@ class Connexion {
 		int x2 = reader.nextInt();
 		int y2 = reader.nextInt();
 		//plat_.calculeDistance(x1,y1,x2,y2);
+		dijkstra_.run(plat_, x1, y1, x2, y2);
 		int min[] = new int[3];
 		min = plat_.dijkstra(x1, y1, x2, y2);
 		System.out.println("Nombres de coups min pour aller de ("+x1+","+y1+") en ("+x2+","+y2+") : " + min[0]);

@@ -12,6 +12,7 @@ class Plateau extends JPanel
 	public static final int Pix = 30;
 
 	private Case plateau_[][];
+	private Case predecesseur_[][];
 	private Grille grille_;
 	private int taille_;
 	private int largeur_;

@@ -1,11 +1,14 @@
+import java.util.ArrayList;
+
 abstract class IA 
 {
 
-	public Case evaluer(Plateau p);
-	public void mettrePion(Plateau p);
+	public abstract Case evaluer(Plateau p);
+	public abstract int[] mettrePion(Plateau p, Dijsktra dijsktra);
+	public char color() { return col_; }
 
-	private char col_;
-	private char colEnnemi_;
-	private ArrayList<Case> casesEtoiles_;
-	private boolean chemin_[][];
+	protected char col_;
+	protected char colEnnemi_;
+	protected ArrayList<Case> etoile_;
+	protected boolean chemin_[][];
 }
