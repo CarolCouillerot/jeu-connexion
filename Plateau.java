@@ -86,7 +86,6 @@ class Plateau extends JPanel
 	public boolean ajoutePion(char p, int i, int j) {
 		boolean possible = false;
 		if ( plateau_[i][j].getCouleur() == 'V' ) {
-
 			possible = true;
 			plateau_[i][j].setCouleur(p);
 			for( Case v : voisins(i, j) ) {
@@ -276,112 +275,6 @@ class Plateau extends JPanel
 
 	public int getTaille() { return taille_; }
 
-	public int[] dijkstra(int xdep, int ydep, int xbut, int ybut) 
-	{
-		int poids[][] = new int[taille_][taille_];
-		boolean dejaVisite[][] = new boolean[taille_][taille_];
-		Case predecesseur[][] = new Case[taille_][taille_];
-		// Sert à stocker la distance min, ainsi que les coordonnées du prédecesseur du but
-		int resultat[] = new int[3];
-
-		initDijkstra(poids, dejaVisite, predecesseur, xdep, ydep);
-
-		char coulObstacle = ( plateau_[xdep][ydep].getCouleur() == 'R') ? 'B' : 'R';
-		
-		boolean tousVisite = false;
-		Case courante = new Case();
-		
-		while(!tousVisite) {
-			courante = trouverMin(dejaVisite,poids);
-			dejaVisite[courante.getX()][courante.getY()] = true;
-			for(Case v : voisins(courante.getX(), courante.getY())) {
-				if(v.getCouleur() != coulObstacle)
-					setDistance(courante,v,predecesseur,poids);
-			}	
-			tousVisite = true;
-			for(int i = 0; i < taille_; ++i) {
-				for(int j = 0; j < taille_; ++j) {
-					if(!dejaVisite[i][j]) tousVisite = false;
-				}
-			}
-		}
-
-
-		afficheTabCoord(predecesseur);
-		int i = xbut;
-		int j = ybut;
-		int cptCol = 0;
-		char colDep = plateau_[xdep][ydep].getCouleur();
-
-		courante = plateau_[i][j];
-
-		while ((i !=xdep) || (j != ydep))
-		{
-
-			if(courante.getCouleur() == colDep)
-			{
-				++cptCol;
-			}
-
-			courante = predecesseur[i][j];
-			i = courante.getX();
-			j = courante.getY();
-			System.out.println(i+","+j);
-
-		}
-		resultat[0] = poids[xbut][ybut] - cptCol;
-		resultat[1] = predecesseur[xbut][ybut].getX();
-		resultat[2] = predecesseur[xbut][ybut].getY();
-		return resultat;
-	}
-
-	private void initDijkstra(int poids[][], boolean dejaVisite[][], Case predecesseur[][], int xdep, int ydep)
-	{
-		char col = plateau_[xdep][ydep].getCouleur();
-		for (int i = 0; i < taille_; ++i)
-		{
-			for (int j = 0; j < taille_; ++j) {
-				poids[i][j] = Integer.MAX_VALUE; // distance a dep
-				if(plateau_[i][j].getCouleur() != col && plateau_[i][j].getCouleur() != 'V') {
-					dejaVisite[i][j] = true;
-					poids[i][j] = -1;
-					predecesseur[i][j] = plateau_[i][j];
-				}
-				else {
-					dejaVisite[i][j] = false;
-					predecesseur[i][j] = null;
-				}
-			}
-
-		}
-		predecesseur[xdep][ydep] = plateau_[xdep][ydep];
-		poids[xdep][ydep] = 0;
-	}
-
-	private Case trouverMin(boolean dejaVisite[][] , int poids[][]) {
-		int min = Integer.MAX_VALUE;
-		Case sommet = new Case(-1,-1,' ',' ',0);
-
-		for(int i = 0; i < taille_; ++i) { 
-			for(int j = 0; j < taille_; ++j) {
-				if(!dejaVisite[i][j] && poids[i][j] < min) {
-					min = poids[i][j];
-					sommet = plateau_[i][j];
-				}
-			}
-		}
-
-		return sommet;
-	}
-
-	private void setDistance(Case c1, Case c2, Case predecesseur[][], int poids[][]) {
-		int x1 = c1.getX(), y1 = c1.getY();
-		int x2 = c2.getX(), y2 = c2.getY();
-		if(poids[x2][y2] > poids[x1][y1] + 1 ) {
-			poids[x2][y2] = poids[x1][y1] + 1;
-			predecesseur[x2][y2] = plateau_[x1][y1];
-		}
-	}
 
 	/**
 	 * Méthode publique de dessin de la grille_ dans la fenêtre graphique

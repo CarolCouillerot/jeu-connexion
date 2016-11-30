@@ -39,8 +39,7 @@ class Dijsktra {
 				}
 			}
 		}
-
-		p.afficheTabCoord(predecesseur_);
+		
 		int i = xbut;
 		int j = ybut;
 		int cptCol = 0;

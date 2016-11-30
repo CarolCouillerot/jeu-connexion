@@ -30,6 +30,7 @@ class IABasique extends IA
 		return null;
 	}
 
+	// Supprime de la liste des étoiles celles qui sont inaccessibles
 	private void cheminvalide(Plateau p) {
 		boolean cheminPossible = false;
 		for(int i = 0; i < etoile_.size(); ++i) 
@@ -54,6 +55,7 @@ class IABasique extends IA
 
 	}
 
+	// Retourne dans un tableau, les coordonnées des deux étoiles à relier
 	private int[] cheminEnCours(Plateau p, Dijsktra dijsktra) 
 	{
 		int coordChemin[] = new int[4];
@@ -81,21 +83,24 @@ class IABasique extends IA
 	public int[] mettrePion(Plateau p, Dijsktra dijsktra) 
 	{
 		Case pion = evaluer(p);
+		// Recherche du plus court chemin actuel
+		// coordExtremiteChemin récupère les coordonnées des deux étoiles à relier
 		int coordExtremiteChemin[] = cheminEnCours(p,dijsktra);
 		int i = coordExtremiteChemin[2];
 		int j = coordExtremiteChemin[3];
 		int tmp;
 
-		while(dijsktra.predecesseur()[i][j].getCouleur() == col_) {
+		while(p.getCase(i,j).getCouleur() == col_) {
 			tmp = i;
 			i = dijsktra.predecesseur()[i][j].getX();
 			j = dijsktra.predecesseur()[tmp][j].getY();
 		}
 
-		p.ajoutePion(col_, i, j);
+		//p.ajoutePion(col_, i, j);
 		int res[] = new int[2];
 		res[0] = i;
 		res[1] = j;
+		
 		return res;
 	} 
 
