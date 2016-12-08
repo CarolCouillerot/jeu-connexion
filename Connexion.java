@@ -161,8 +161,12 @@ class Connexion {
 		System.out.println("Entrer coord case ");
 		int x = reader.nextInt();
 		int y = reader.nextInt();
+		plat_.colorerCase(x,y,joueur);
 		
+		System.out.println("joueuer[5] " + joueur_[5].getX());
+
 		int i = (joueur == 'B') ? k_ : 0;
+
 		int u = 0;
 		int v = 0;
 
@@ -170,10 +174,11 @@ class Connexion {
 
 		for (int j = i; j < i + k_; ++j)
 		{	
+			System.out.println(j);
 			u += joueur_[j].getX();
 			v += joueur_[j].getY();		
+			System.out.println("u: "+u+ ", v: "+v);
 		}	
-		
 		u /= k_;
 		v /= k_;
 	
@@ -181,6 +186,7 @@ class Connexion {
 
 
 		int interet = dijkstra_.run(plat_, x, y, u, v);
+		plat_.decoloration(x,y);
 		
 		System.out.println("Plus le nombre est grand, plus l'interêt est faible.\n Voici l'interêt de placer un pion en (" + x + "," + y + ") : " + interet);
 	}

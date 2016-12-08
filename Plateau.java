@@ -67,6 +67,10 @@ class Plateau
 		plateau_[x][y].setCouleur(col);
 	}
 
+	public void decoloration(int x, int y) {
+		plateau_[x][y].setCouleur('v');
+	}
+
 	public boolean ajoutePion(char p, int i, int j) {
 		boolean possible = false;
 		if ( plateau_[i][j].getCouleur() == 'V' ) {
@@ -264,7 +268,7 @@ class Plateau
 		Case nbEtoile [] = new Case [2*k_];
 		
 		int indR = 0;
-		int indB = k_ - 1;
+		int indB = k_;
 
 		for(int i=0; i<taille_; ++i) 
 		{
@@ -272,17 +276,19 @@ class Plateau
 			{
 				if (plateau_[i][j].getCouleur() == 'B') 
 				{
+					System.out.println("bleu");
 					nbEtoile[indB] = plateau_[i][j];
 					++indB;
 				}
 				else if (plateau_[i][j].getCouleur() == 'R') 
 				{
+					System.out.println("rouge");
 					nbEtoile[indR] = plateau_[i][j];
 					++indR;
 				}
 			}
 		}
-		
+			System.out.println("joueuer[5] " + nbEtoile[5].getX());
 		return nbEtoile;
 	}
 
