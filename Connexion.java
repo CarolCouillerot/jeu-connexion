@@ -201,7 +201,11 @@ class Connexion
 
 		if (plat_.existeCheminCases(plat_.getCase(xdep,ydep),plat_.getCase(xbut,ybut))) 
 		{
-			System.out.println("Chemin existe");
+			System.out.println("Un chemin existe.");
+		}
+		else
+		{
+			System.out.println("Aucun chemin n'existe.");
 		}
 	}
 
@@ -255,7 +259,7 @@ class Connexion
 	{
 		System.out.print("La première saisie correspond aux lignes, la seconde aux colonnes.\n");				
 		System.out.println("Entrez la coordonnées de la case.");
-		int x = reader.nextInt()
+		int x = reader.nextInt();
 		int y = reader.nextInt();
 		
 		if (plat_.relieComposantes(joueur, x, y))
