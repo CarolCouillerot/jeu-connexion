@@ -1,5 +1,5 @@
-
-class Case {
+class Case 
+{
 
 	// Coordonnées de la case
 	private int i_;
@@ -24,44 +24,118 @@ class Case {
 	// contient le bon nombre d'étoiles dans la composante
 	private int etoile_;
 
-	public Case(int i, int j, char col, char type, int etoiles) {
-
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
+	public Case(int i, int j, char col, char type, int etoiles) 
+	{
 		i_ = i;
 		j_ = j;
 		ip_ = i;
 		jp_ = j;
-
 		couleur_ = col;
 		typeCase_ = type;
-
 		etoile_ = etoiles;
-
 	}
+
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  	
 	public Case() {}
 
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
 	public int getX() { return i_; }
+	
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
 	public int getY() { return j_; }
 
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
 	public int getXParent() { return ip_; }
+	
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
 	public int getYParent() { return jp_; }
 
-	public void setParent(int i, int j) {
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
+	public void setParent(int i, int j) 
+	{
 		ip_ = i;
 		jp_ = j;
 	}
 
-	public void setParent(Case c) {
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
+	public void setParent(Case c) 
+	{
 		ip_ = c.getXParent();
 		jp_ = c.getYParent();
 	}
 
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
 	public char getCouleur() { return couleur_; }
+	
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  	
 	public void setCouleur(char c) { couleur_ = c; }
 
-
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
 	public char getTypeCase() { return typeCase_; }
+	
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
 	public void setTypeCase(char type) { typeCase_ = type; }
 
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
 	public int getNbEtoiles() { return etoile_; }
+	
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
 	public void addEtoiles(int n) { etoile_ += n; }
 }

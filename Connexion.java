@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-class Connexion {
-
+class Connexion 
+{
 	private int k_;
 	private Plateau plat_;
 	private int taille_;
@@ -10,6 +10,11 @@ class Connexion {
 	private IA ia_;
 	private Case[] joueur_;
 
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
 	public Connexion(int taillePlateau, int k) 
 	{
 		k_ = k;
@@ -20,6 +25,11 @@ class Connexion {
 		joueur_ = plat_.getEtoile();
 	}
 
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
 	public static void main(String[] args) 
 	{
 		Scanner reader = new Scanner(System.in);
@@ -33,10 +43,13 @@ class Connexion {
 		char joueur[] = new char[2];
 		joueur[0] = 'B';
 		joueur[1] = 'R';
-		int numJoueur = 0;
+
+		game.menuMode(reader, game, joueur);
 
 		game.afficherPlateau();
 
+
+/*
 		for(int i =0; i < 20; ++i) {
 			//if(numJoueur == 0) {
 				game.menu(reader, joueur[numJoueur]);
@@ -47,20 +60,68 @@ class Connexion {
 			game.afficherPlateau();
 			numJoueur = (numJoueur+1)%2;
 		}
+*/
 	}
 
-	public void tourIA() {
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
+	public void tourIA() 
+	{
 		int res[] = new int[2];
 
 		res = ia_.mettrePion(plat_, dijkstra_);
 		plat_.ajoutePion(ia_.color(), res[0], res[1]);
 	}
 
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
 	public Plateau getPlateau() { return plat_; }
 
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
 	public void afficherPlateau() { plat_.afficher(); }
 
-	public void menu(Scanner reader, char joueur) {
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/ 
+	public void menuMode(Scanner reader, Connexion co, char [] j)
+	{
+		System.out.println("Quel type de partie souhaitez vous jouer ?");		
+		System.out.println("1. Jouer conter un joueur");
+		System.out.println("2. Jouer contre une IA");
+		System.out.println("Votre choix : ");
+
+		int choix = reader.nextInt();
+
+		switch(choix) 
+		{
+			case 1: joueDeuxHumains(reader, co, j);
+				break;
+			case 2: joueOrdiHumain(reader, co, j);
+				break;
+			default: System.out.println("erreur.");
+							menuMode(reader, co, j);
+		}
+	}
+
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
+	public void menu(Scanner reader, char joueur) 
+	{
 		System.out.println("1. Ajouter un pion");
 		System.out.println("2. Afficher composante");
 		System.out.println("3. Tester l'existence de chemin");
@@ -73,7 +134,8 @@ class Connexion {
 
 		int choix = reader.nextInt();
 
-		switch(choix) {
+		switch(choix) 
+		{
 			case 1: ajouterPion(reader, joueur);
 				break;
 			case 2: afficherComposante(reader, joueur);
@@ -95,34 +157,59 @@ class Connexion {
 		}
 	}
 
-	public void ajouterPion(Scanner reader, char joueur) {
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
+	public void ajouterPion(Scanner reader, char joueur) 
+	{
+		System.out.print("La première saisie correspond aux lignes, la seconde aux colonnes.\n");		
 		System.out.print("Entrez coord du pion à mettre : ");
 		int x = reader.nextInt();
 		int y = reader.nextInt();
 		plat_.ajoutePion(joueur,x,y);
 	}
 
-	public void afficherComposante(Scanner reader, char joueur) {
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
+	public void afficherComposante(Scanner reader, char joueur) 
+	{
 		System.out.println("Afficher composante de : ");
 		int x = reader.nextInt();
 		int y = reader.nextInt();
 		plat_.afficheComposante(x,y);
 	}
 
-	public void existeChemin(Scanner reader, char joueur) {
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
+	public void existeChemin(Scanner reader, char joueur) 
+	{
 		System.out.println("Existe chemin : entrer coord case dep puis case d'arrivee");
 		int xdep = reader.nextInt();
 		int ydep = reader.nextInt();
 		int xbut = reader.nextInt();
 		int ybut = reader.nextInt();
 
-		if(plat_.existeCheminCases(plat_.getCase(xdep,ydep),plat_.getCase(xbut,ybut))) {
+		if (plat_.existeCheminCases(plat_.getCase(xdep,ydep),plat_.getCase(xbut,ybut))) 
+		{
 			System.out.println("Chemin existe");
 		}
-
 	}
 
-	public void distance(Scanner reader, char joueur) {
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
+	public void distance(Scanner reader, char joueur) 
+	{
 		System.out.println("Existe chemin : entrer coord case dep puis case d'arrivee");
 		int x1 = reader.nextInt();
 		int y1 = reader.nextInt();
@@ -135,27 +222,48 @@ class Connexion {
 		//System.out.println("Nombres de coups min pour aller de ("+x1+","+y1+") en ("+x2+","+y2+") : " + min[0]);
 	}
 
-	public void nbEtoiles(Scanner reader, char joueur) {
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
+	public void nbEtoiles(Scanner reader, char joueur) 
+	{
 		System.out.println("Entrer coord case ");
 		int x1 = reader.nextInt();
 		int y1 = reader.nextInt();
 		System.out.println("Nb étoiles : " + plat_.nombreEtoiles(plat_.getCase(x1,y1)));
 	}
 
-	public void afficherScores() {
-		plat_.afficherScore();
-	}
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
+	public void afficherScores() { plat_.afficherScore(); }
 
-	public void relieComposante(Scanner reader, char joueur) {
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
+	public void relieComposante(Scanner reader, char joueur) 
+	{
 		System.out.println("Entrer coord case ");
 		int x = reader.nextInt();
 		int y = reader.nextInt();
-		if(plat_.relieComposantes(joueur, x, y))
+		
+		if (plat_.relieComposantes(joueur, x, y))
 			System.out.println("L'ajout d'un pion en ("+x+","+y+") relie bien des composantes");
 		else
 			System.out.println("L'ajout d'un pion en ("+x+","+y+") ne relie pas de composantes");
 	}
 
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
 	public void evaluerCase1(Scanner reader, char joueur)
 	{
 		System.out.println("Entrer coord case ");
@@ -163,32 +271,67 @@ class Connexion {
 		int y = reader.nextInt();
 		plat_.colorerCase(x,y,joueur);
 		
-		System.out.println("joueuer[5] " + joueur_[5].getX());
-
 		int i = (joueur == 'B') ? k_ : 0;
 
 		int u = 0;
 		int v = 0;
 
-		System.out.println("i+k : " + (i+k_));
-
 		for (int j = i; j < i + k_; ++j)
 		{	
-			System.out.println(j);
 			u += joueur_[j].getX();
 			v += joueur_[j].getY();		
-			System.out.println("u: "+u+ ", v: "+v);
 		}	
+
 		u /= k_;
 		v /= k_;
 	
-		System.out.println("centre : " + u + "," + v);
-
-
 		int interet = dijkstra_.run(plat_, x, y, u, v);
 		plat_.decoloration(x,y);
 		
 		System.out.println("Plus le nombre est grand, plus l'interêt est faible.\n Voici l'interêt de placer un pion en (" + x + "," + y + ") : " + interet);
 	}
 
+
+	public void joueDeuxHumains(Scanner reader, Connexion co, char [] j)
+	{
+		int numJoueur = 0;
+		String couleur;
+
+		co.afficherPlateau();
+
+		for (int i = 0; i < 20; ++i) 
+		{
+			if (numJoueur == 0)
+				couleur = "bleu";
+			else
+				couleur = "rouge";
+
+			System.out.println("Vous êtes en " + couleur + ", c'est votre tour de jouer. \nQue souhaitez vous faire ?");			
+			co.menu(reader, j[numJoueur]);
+			co.afficherPlateau();
+			numJoueur = (numJoueur+1)%2;
+		}
+	}
+	
+	public void joueOrdiHumain(Scanner reader, Connexion co, char [] j)
+	{
+		int numJoueur = 0;
+
+		co.afficherPlateau();
+
+		for (int i = 0; i < 20; ++i) 
+		{
+			if(numJoueur == 0) 
+			{
+				System.out.println("Vous êtes en bleu, c'est votre tour de jouer. \nQue souhaitez vous faire ?");
+				co.menu(reader, j[numJoueur]);
+			}
+			else 
+			{
+				co.tourIA();
+			}
+			co.afficherPlateau();
+			numJoueur = (numJoueur+1)%2;
+		}
+	}
 }
