@@ -165,7 +165,7 @@ class Connexion
 	public void ajouterPion(Scanner reader, char joueur) 
 	{
 		System.out.print("La première saisie correspond aux lignes, la seconde aux colonnes.\n");		
-		System.out.print("Entrez coord du pion à mettre : ");
+		System.out.print("Entrez la coordonnée du pion à mettre : ");
 		int x = reader.nextInt();
 		int y = reader.nextInt();
 		plat_.ajoutePion(joueur,x,y);
@@ -178,7 +178,8 @@ class Connexion
 	**/  
 	public void afficherComposante(Scanner reader, char joueur) 
 	{
-		System.out.println("Afficher composante de : ");
+		System.out.print("La première saisie correspond aux lignes, la seconde aux colonnes.\n");				
+		System.out.println("Afficher la composante de : ");
 		int x = reader.nextInt();
 		int y = reader.nextInt();
 		plat_.afficheComposante(x,y);
@@ -191,7 +192,8 @@ class Connexion
 	**/  
 	public void existeChemin(Scanner reader, char joueur) 
 	{
-		System.out.println("Existe chemin : entrer coord case dep puis case d'arrivee");
+		System.out.print("La première saisie correspond aux lignes, la seconde aux colonnes.\n");		
+		System.out.println("Existe chemin : entrer la coordonnées de la case de départ puis de la case d'arrivée.");
 		int xdep = reader.nextInt();
 		int ydep = reader.nextInt();
 		int xbut = reader.nextInt();
@@ -210,7 +212,8 @@ class Connexion
 	**/  
 	public void distance(Scanner reader, char joueur) 
 	{
-		System.out.println("Existe chemin : entrer coord case dep puis case d'arrivee");
+		System.out.print("La première saisie correspond aux lignes, la seconde aux colonnes.\n");				
+		System.out.println("Existe chemin : entrer la coordonnées de la case de départ puis de la case d'arrivée.");
 		int x1 = reader.nextInt();
 		int y1 = reader.nextInt();
 		int x2 = reader.nextInt();
@@ -229,7 +232,8 @@ class Connexion
 	**/  
 	public void nbEtoiles(Scanner reader, char joueur) 
 	{
-		System.out.println("Entrer coord case ");
+		System.out.print("La première saisie correspond aux lignes, la seconde aux colonnes.\n");				
+		System.out.println("Entrez la coordonnées de la case.");
 		int x1 = reader.nextInt();
 		int y1 = reader.nextInt();
 		System.out.println("Nb étoiles : " + plat_.nombreEtoiles(plat_.getCase(x1,y1)));
@@ -249,8 +253,9 @@ class Connexion
 	**/  
 	public void relieComposante(Scanner reader, char joueur) 
 	{
-		System.out.println("Entrer coord case ");
-		int x = reader.nextInt();
+		System.out.print("La première saisie correspond aux lignes, la seconde aux colonnes.\n");				
+		System.out.println("Entrez la coordonnées de la case.");
+		int x = reader.nextInt()
 		int y = reader.nextInt();
 		
 		if (plat_.relieComposantes(joueur, x, y))
@@ -266,7 +271,8 @@ class Connexion
 	**/  
 	public void evaluerCase1(Scanner reader, char joueur)
 	{
-		System.out.println("Entrer coord case ");
+		System.out.print("La première saisie correspond aux lignes, la seconde aux colonnes.\n");				
+		System.out.println("Entrez la coordonnées de la case.");
 		int x = reader.nextInt();
 		int y = reader.nextInt();
 		plat_.colorerCase(x,y,joueur);
