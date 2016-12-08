@@ -3,23 +3,32 @@ import java.util.Scanner;
 
 class Connexion {
 
+	private int k_;
 	private Plateau plat_;
 	private int taille_;
 	private Dijsktra dijkstra_;
 	private IA ia_;
+	private Case[] joueur_;
 
-	public Connexion(int taillePlateau) {
-		plat_ = new Plateau(taillePlateau);
+	public Connexion(int taillePlateau, int k) 
+	{
+		k_ = k;
+		plat_ = new Plateau(taillePlateau, k_);
 		taille_ = taillePlateau;
 		dijkstra_ = new Dijsktra(taillePlateau);
 		ia_ = new IABasique('R', plat_);
+		joueur_ = plat_.getEtoile();
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) 
+	{
 		Scanner reader = new Scanner(System.in);
 		System.out.println("Taille du plateau : ");
+		int taille = reader.nextInt();
 
-		Connexion game = new Connexion(reader.nextInt());
+		System.out.println("Nombre d'étoiles souhaité : ");
+
+		Connexion game = new Connexion(taille, reader.nextInt());
 
 		char joueur[] = new char[2];
 		joueur[0] = 'B';
@@ -29,12 +38,12 @@ class Connexion {
 		game.afficherPlateau();
 
 		for(int i =0; i < 20; ++i) {
-			if(numJoueur == 0) {
+			//if(numJoueur == 0) {
 				game.menu(reader, joueur[numJoueur]);
-			}
-			else {
-				game.tourIA();
-			}
+			//}
+			//else {
+				//game.tourIA();
+			//}
 			game.afficherPlateau();
 			numJoueur = (numJoueur+1)%2;
 		}
@@ -59,6 +68,7 @@ class Connexion {
 		System.out.println("5. nb etoiles");
 		System.out.println("6. Score des joueurs");
 		System.out.println("7. Relie composante ?");
+		System.out.println("8. EvaluerCase1 ?");
 		System.out.println("Votre choix : ");
 
 		int choix = reader.nextInt();
@@ -77,6 +87,8 @@ class Connexion {
 			case 6: afficherScores();
 				break;
 			case 7: relieComposante(reader,joueur);
+				break;
+			case 8: evaluerCase1(reader,joueur);
 				break;
 			default: System.out.println("erreur.");
 							menu(reader, joueur);
@@ -142,6 +154,35 @@ class Connexion {
 			System.out.println("L'ajout d'un pion en ("+x+","+y+") relie bien des composantes");
 		else
 			System.out.println("L'ajout d'un pion en ("+x+","+y+") ne relie pas de composantes");
+	}
+
+	public void evaluerCase1(Scanner reader, char joueur)
+	{
+		System.out.println("Entrer coord case ");
+		int x = reader.nextInt();
+		int y = reader.nextInt();
+		
+		int i = (joueur == 'B') ? k_ : 0;
+		int u = 0;
+		int v = 0;
+
+		System.out.println("i+k : " + (i+k_));
+
+		for (int j = i; j < i + k_; ++j)
+		{	
+			u += joueur_[j].getX();
+			v += joueur_[j].getY();		
+		}	
+		
+		u /= k_;
+		v /= k_;
+	
+		System.out.println("centre : " + u + "," + v);
+
+
+		int interet = dijkstra_.run(plat_, x, y, u, v);
+		
+		System.out.println("Plus le nombre est grand, plus l'interêt est faible.\n Voici l'interêt de placer un pion en (" + x + "," + y + ") : " + interet);
 	}
 
 }

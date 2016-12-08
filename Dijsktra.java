@@ -18,6 +18,9 @@ class Dijsktra {
 	public Case[][] predecesseur() { return predecesseur_; }
 
 	public int run(Plateau p, int xdep, int ydep, int xbut, int ybut) {
+
+		System.out.println("Dijsktra");
+
 		init(p, xdep, ydep);
 
 		char coulObstacle = ( p.getCase(xdep,ydep).getCouleur() == 'R') ? 'B' : 'R';
@@ -61,6 +64,7 @@ class Dijsktra {
 			System.out.println(i+","+j);
 
 		}
+		p.afficheTabCoord(predecesseur_);
 		return poids_[xbut][ybut] - cptCol;
 	}
 

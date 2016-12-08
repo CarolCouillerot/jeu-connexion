@@ -1,22 +1,13 @@
 import java.util.ArrayList;
 import java.util.Random;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import javax.swing.JPanel;
 
-class Plateau extends JPanel
+class Plateau
 {
-
-	public static final int Pix = 30;
 
 	private Case plateau_[][];
 	private Case predecesseur_[][];
-	private Grille grille_;
 	private int taille_;
-	private int largeur_;
-	private int hauteur_;
+	private int k_;
 
 	public static final String FG_DEFAULT = "\u001B[0m";
 	public static final String BG_DEFAULT = "\u001B[49m";
@@ -24,18 +15,11 @@ class Plateau extends JPanel
 	public static final String BG_LIGHTGREY = "\u001B[47m";
 	public static final String BG_RED = "\u001B[41m";
 
-	// Nombres de cases par joueur au départ
-	public static final int K = 2;
-
-	public Plateau(int taille) {
+	public Plateau(int taille, int k) {
 		
 		taille_ = taille;
-
-		// Dimensions de la fenêtre
-		setPreferredSize(new Dimension(Pix*(taille_+1), Pix*(taille_+1)));
 		
-		// Grille
-		grille_ = new Grille(taille_);
+		k_ = k;
 
 		plateau_ = new Case[taille_][taille_];
 		for(int i = 0; i < taille_; ++i) {
@@ -52,9 +36,9 @@ class Plateau extends JPanel
 
 	private void genererPositionDebut(char col) {
 		Random rand = new Random();
-		int x[] = new int[K];
-		int y[] = new int[K];
-		for(int i = 0; i < K; ++i) {
+		int x[] = new int[k_];
+		int y[] = new int[k_];
+		for(int i = 0; i < k_; ++i) {
 
 			x[i] = rand.nextInt(taille_);
 			y[i] = rand.nextInt(taille_);
@@ -62,8 +46,8 @@ class Plateau extends JPanel
 		boolean coordDistincte = false;
 		while(!coordDistincte) {
 			coordDistincte = true;
-			for(int i = 0; i < K-1; ++i)
-				for(int j = i+1; j < K; ++j) {
+			for(int i = 0; i < k_-1; ++i)
+				for(int j = i+1; j < k_; ++j) {
 					if(x[i]==x[j] && y[i]==y[j]) {
 						coordDistincte = false;
 						x[j] = rand.nextInt(taille_);
@@ -72,7 +56,7 @@ class Plateau extends JPanel
 				}
 		}
 
-		for(int i = 0; i < K; ++i) {
+		for(int i = 0; i < k_; ++i) {
 			plateau_[x[i]][y[i]].setCouleur(col);
 			plateau_[x[i]][y[i]].setTypeCase('*');
 			plateau_[x[i]][y[i]].addEtoiles(1);
@@ -275,35 +259,31 @@ class Plateau extends JPanel
 
 	public int getTaille() { return taille_; }
 
-
-	/**
-	 * Méthode publique de dessin de la grille_ dans la fenêtre graphique
-	 */
-	public void dessiner() {
-		repaint();  // appel de paintComponent redéfinie ci-après
-	}
-
-	protected void paintComponent(Graphics g2d) {
-		super.paintComponent(g2d);
-		//Graphics g2d = (Graphics2D)g;
-		// fond
-		Color couleur = new Color(80, 80, 80);
-		g2d.setColor(couleur);
-		g2d.fillRect(0, 0, largeur_, hauteur_);
-		// superposition des couleurs
+	public Case[] getEtoile()
+	{
+		Case nbEtoile [] = new Case [2*k_];
 		
-		g2d.setXORMode(couleur);
-		//grille_
-		grille_.dessiner(g2d);
-		grille_.setVisible(true);
+		int indR = 0;
+		int indB = k_ - 1;
 
-		// parcours du tableau 2D
-		for(int i = 0; i < taille_; i++){
-			for(int j = 0; j < taille_; j++){
-				if(plateau_[i][j] != null){
-					//plateau_[i][j].dessiner(g2d);
+		for(int i=0; i<taille_; ++i) 
+		{
+			for(int j=0; j<taille_; ++j) 
+			{
+				if (plateau_[i][j].getCouleur() == 'B') 
+				{
+					nbEtoile[indB] = plateau_[i][j];
+					++indB;
+				}
+				else if (plateau_[i][j].getCouleur() == 'R') 
+				{
+					nbEtoile[indR] = plateau_[i][j];
+					++indR;
 				}
 			}
 		}
+		
+		return nbEtoile;
 	}
+
 }
