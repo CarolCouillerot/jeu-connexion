@@ -45,22 +45,6 @@ class Connexion
 		joueur[1] = 'R';
 
 		game.menuMode(reader, game, joueur);
-
-		game.afficherPlateau();
-
-
-/*
-		for(int i =0; i < 20; ++i) {
-			//if(numJoueur == 0) {
-				game.menu(reader, joueur[numJoueur]);
-			//}
-			//else {
-				//game.tourIA();
-			//}
-			game.afficherPlateau();
-			numJoueur = (numJoueur+1)%2;
-		}
-*/
 	}
 
 	/**
@@ -111,7 +95,7 @@ class Connexion
 			case 2: joueOrdiHumain(reader, co, j);
 				break;
 			default: System.out.println("erreur.");
-							menuMode(reader, co, j);
+				menuMode(reader, co, j);
 		}
 	}
 
@@ -153,7 +137,7 @@ class Connexion
 			case 8: evaluerCase1(reader,joueur);
 				break;
 			default: System.out.println("erreur.");
-							menu(reader, joueur);
+				menu(reader, joueur);
 		}
 	}
 

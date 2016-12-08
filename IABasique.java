@@ -65,7 +65,7 @@ class IABasique extends IA
 
 			if (!cheminPossible) 
 			{
-				for(int k = 0; k < etoile_.size(); ++k) 
+				for (int k = 0; k < etoile_.size(); ++k) 
 				{
 					chemin_[i][k] = false;
 					chemin_[k][i] = false;
@@ -128,7 +128,6 @@ class IABasique extends IA
 			j = dijsktra.predecesseur()[tmp][j].getY();
 		}
 
-		//p.ajoutePion(col_, i, j);
 		int res[] = new int[2];
 		res[0] = i;
 		res[1] = j;

@@ -123,7 +123,7 @@ class Plateau
 
 		afficheComposanteRec(plateau_[i][j]	, aAfficher);
 
-		for (int k=0; k<aAfficher.size(); ++k) 
+		for (int k = 0; k < aAfficher.size(); ++k) 
 		{
 			System.out.print("("+aAfficher.get(k).getX()+","+aAfficher.get(k).getY()+") ");
 		}
@@ -284,7 +284,7 @@ class Plateau
 		else if(etoileBleue > etoileRouge)
 			System.out.println("Le joueur bleu est devant avec "+etoileBleue+" etoiles connectées contre "+etoileRouge+" etoiles pour rouge");
 		else
-			System.out.println("Egalite avec "+etoileBleue+" etoiles pour chacun");
+			System.out.println("Egalite avec "+ etoileBleue +" etoiles pour chacun");
 	}
 
 	/**
@@ -408,7 +408,7 @@ class Plateau
 	**/  
 	public Case[] getEtoile()
 	{
-		Case nbEtoile [] = new Case [2*k_];
+		Case nbEtoile [] = new Case [2 * k_];
 		int indR = 0;
 		int indB = k_;
 
@@ -428,7 +428,7 @@ class Plateau
 				}
 			}
 		}
-		
+
 		return nbEtoile;
 	}
 }
