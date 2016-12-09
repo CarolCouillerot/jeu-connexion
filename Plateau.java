@@ -29,11 +29,9 @@ class Plateau
 		{
 			for (int j = 0; j < taille_; ++j) 
 			{
-
 				plateau_[i][j] = new Case(i,j,'V',' ', 0);
 			}
 		}
-
 		genererPositionDebut();
 	}
 
@@ -283,7 +281,7 @@ class Plateau
 			}
 		}
 
-		if(etoileRouge > etoileBleue)
+		if (etoileRouge > etoileBleue)
 			System.out.println("Le joueur rouge est devant avec "+etoileRouge+" etoiles connectées contre "+etoileBleue+" etoiles pour bleu");
 		else if(etoileBleue > etoileRouge)
 			System.out.println("Le joueur bleu est devant avec "+etoileBleue+" etoiles connectées contre "+etoileRouge+" etoiles pour rouge");
@@ -304,6 +302,7 @@ class Plateau
 		{
 			c1 = classe(c1.getX(), c1.getY());
 			c2 = classe(c2.getX(), c2.getY());
+
 			if (c1.getXParent() == c2.getXParent() && c1.getYParent() == c2.getYParent())
 				res = true;
 		}
@@ -345,6 +344,7 @@ class Plateau
 	public void afficher() 
 	{
 		System.out.print("    ");
+
 		for(int i = 0; i < taille_; ++i) 
 		{
 			System.out.print(i + " ");
@@ -354,7 +354,9 @@ class Plateau
 		for (int i = 0; i < taille_; ++i) 
 		{
 			System.out.print(i + " ");
+
 			if(i < 10) System.out.print(" ");
+			
 			System.out.print("|");
 
 			for (int j = 0; j < taille_; ++j) 
@@ -383,7 +385,6 @@ class Plateau
 			for (int j = 0; j < taille_; ++j) 
 			{
 				System.out.print( tab[i][j]+ "|");
-
 			}
 			System.out.println();
 		}
@@ -402,7 +403,6 @@ class Plateau
 			for (int j = 0; j < taille_; ++j) 
 			{
 				System.out.print(tab[i][j].getX()+","+tab[i][j].getY()+ "|");
-
 			}
 			System.out.println();
 		}

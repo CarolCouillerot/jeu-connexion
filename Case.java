@@ -1,6 +1,5 @@
 class Case 
 {
-
 	// Coordonnées de la case
 	private int i_;
 	private int j_;

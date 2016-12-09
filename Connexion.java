@@ -15,7 +15,6 @@ class Connexion
 	private char gagnant_;
 	private int nbCasesVides_;
 
-
 	/**
 	 * @brief      
 	 * @entrées   
@@ -53,7 +52,7 @@ class Connexion
 		joueur[0] = 'B';
 		joueur[1] = 'R';
 
-		game.menuMode(reader, game, joueur);
+		game.menuMode(reader, joueur);
 	}
 
 	/**
@@ -88,7 +87,7 @@ class Connexion
 	 * @entrées   
 	 * @sorties   
 	**/ 
-	public void menuMode(Scanner reader, Connexion co, char [] j)
+	public void menuMode(Scanner reader, char [] j)
 	{
 		System.out.println("Quel type de partie souhaitez vous jouer ?");		
 		System.out.println("1. Jouer conter un joueur");
@@ -99,12 +98,12 @@ class Connexion
 
 		switch(choix) 
 		{
-			case 1: joueDeuxHumains(reader, co, j);
+			case 1: joueDeuxHumains(reader, j);
 				break;
-			case 2: joueOrdiHumain(reader, co, j);
+			case 2: joueOrdiHumain(reader, j);
 				break;
 			default: System.out.println("erreur.");
-				menuMode(reader, co, j);
+				menuMode(reader, j);
 		}
 	}
 
@@ -166,10 +165,12 @@ class Connexion
 		System.out.print("Entrez la coordonnée du pion à mettre : ");
 		int x = reader.nextInt();
 		int y = reader.nextInt();
+		
 		if (plat_.ajoutePion(joueur, x, y))
 		{
 			dernierX_ = x;
 			dernierY_ = y;
+
 			return true;
 		}
 
@@ -205,13 +206,9 @@ class Connexion
 		int ybut = reader.nextInt();
 
 		if (plat_.existeCheminCases(plat_.getCase(xdep,ydep),plat_.getCase(xbut,ybut))) 
-		{
 			System.out.println("Un chemin existe.");
-		}
 		else
-		{
 			System.out.println("Aucun chemin n'existe.");
-		}
 	}
 
 	/**
@@ -223,6 +220,7 @@ class Connexion
 	{
 		System.out.print("La première saisie correspond aux lignes, la seconde aux colonnes.\n");				
 		System.out.println("Existe chemin : entrer la coordonnées de la case de départ puis de la case d'arrivée.");
+		
 		int x1 = reader.nextInt();
 		int y1 = reader.nextInt();
 		int x2 = reader.nextInt();
@@ -242,8 +240,10 @@ class Connexion
 	{
 		System.out.print("La première saisie correspond aux lignes, la seconde aux colonnes.\n");				
 		System.out.println("Entrez la coordonnées de la case.");
+		
 		int x1 = reader.nextInt();
 		int y1 = reader.nextInt();
+		
 		System.out.println("Nb étoiles : " + plat_.nombreEtoiles(plat_.getCase(x1,y1)));
 	}
 
@@ -263,6 +263,7 @@ class Connexion
 	{
 		System.out.print("La première saisie correspond aux lignes, la seconde aux colonnes.\n");				
 		System.out.println("Entrez la coordonnées de la case.");
+		
 		int x = reader.nextInt();
 		int y = reader.nextInt();
 		
@@ -281,6 +282,7 @@ class Connexion
 	{
 		System.out.print("La première saisie correspond aux lignes, la seconde aux colonnes.\n");				
 		System.out.println("Entrez la coordonnées de la case.");
+		
 		int x = reader.nextInt();
 		int y = reader.nextInt();
 		plat_.colorerCase(x,y,joueur);
@@ -306,7 +308,7 @@ class Connexion
 	}
 
 
-	public void joueDeuxHumains(Scanner reader, Connexion co, char [] j)
+	public void joueDeuxHumains(Scanner reader, char [] j)
 	{
 		int numJoueur = 0;
 		int menu;
@@ -315,7 +317,7 @@ class Connexion
 
 		while (!gameOver)
 		{
-			co.afficherPlateau();
+			afficherPlateau();
 
 			if (numJoueur == 0)
 				couleur = "bleu";
@@ -325,20 +327,20 @@ class Connexion
 			System.out.println("*********************************************************************");
 			System.out.println("Vous êtes en " + couleur + ", c'est votre tour de jouer. \nQue souhaitez vous faire ?");			
 			System.out.println("*********************************************************************");
-			menu = co.menu(reader, j[numJoueur]);
+			menu = menu(reader, j[numJoueur]);
 
 			if (menu == 1)
 			{
 				if (isGameOver(j[numJoueur]))
 					gameOver = true;
 				else
-					numJoueur = (numJoueur+1)%2;
+					numJoueur = (numJoueur + 1) % 2;
 			}	
 		}
-		co.afficherPlateau();
+		afficherPlateau();
 	}
 	
-	public void joueOrdiHumain(Scanner reader, Connexion co, char [] j)
+	public void joueOrdiHumain(Scanner reader, char [] j)
 	{
 		int numJoueur = 0;
 		int menu;
@@ -346,42 +348,43 @@ class Connexion
 
 		while (!gameOver)
 		{
-			co.afficherPlateau();
+			afficherPlateau();
 
-			if(numJoueur == 0) 
+			if (numJoueur == 0) 
 			{
 
 				System.out.println("*********************************************************************");
 				System.out.println("Vous êtes en bleu, c'est votre tour de jouer. \nQue souhaitez vous faire ?");	
 				System.out.println("*********************************************************************");
 				
-				menu = co.menu(reader, j[numJoueur]);
+				menu = menu(reader, j[numJoueur]);
 				
 				if (menu == 1)
 				{
 					if (isGameOver(j[numJoueur]))
 						gameOver = true;
 					else
-						numJoueur = (numJoueur+1)%2;
+						numJoueur = (numJoueur + 1) % 2;
 				}				
 			}
 			else 
 			{
-				co.tourIA();
+				tourIA();
 
 				if (isGameOver(j[numJoueur]))
 					gameOver = true;
 				else
-					numJoueur = (numJoueur+1)%2;
+					numJoueur = (numJoueur + 1) % 2;
 			}
 		}
-		co.afficherPlateau();
+		afficherPlateau();
 	}
 
 	public void abandonner(char joueur) 
 	{
 		String perdant, gagnant;
-		if(joueur == 'B')
+		
+		if (joueur == 'B')
 		{
 			perdant = "Bleu";
 			gagnant = "Rouge";
@@ -427,7 +430,8 @@ class Connexion
 	public void gagner(char joueur) 
 	{
 		String perdant, gagnant;
-		if(joueur == 'R')
+
+		if (joueur == 'R')
 		{
 			perdant = "Bleu";
 			gagnant = "Rouge";
@@ -438,7 +442,7 @@ class Connexion
 			gagnant = "Bleu";
 		}
 			
-		if(joueur == 'E') 
+		if (joueur == 'E') 
 		{
 			System.out.println("\n\n*****************************************************");
 			System.out.println("Le joueur " + gagnant + " gagne la partie en reliant toutes ses étoiles.");

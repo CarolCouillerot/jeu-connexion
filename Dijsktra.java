@@ -47,7 +47,7 @@ class Dijsktra
 			
 			for (Case v : p.voisins(courante.getX(), courante.getY())) 
 			{
-				if(v.getCouleur() != coulObstacle)
+				if (v.getCouleur() != coulObstacle)
 					setDistance(p, courante, v);
 			}	
 			
@@ -128,11 +128,11 @@ class Dijsktra
 		min_ = Integer.MAX_VALUE;
 		Case sommet = new Case(-1,-1,' ',' ',0);
 
-		for(int i = 0; i < taille_; ++i) 
+		for (int i = 0; i < taille_; ++i) 
 		{ 
-			for(int j = 0; j < taille_; ++j) 
+			for (int j = 0; j < taille_; ++j) 
 			{		
-				if(!dejaVisite_[i][j] && poids_[i][j] < min_) 
+				if (!dejaVisite_[i][j] && poids_[i][j] < min_) 
 				{
 					min_ = poids_[i][j];
 					sommet = p.getCase(i,j);
