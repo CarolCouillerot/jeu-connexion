@@ -227,11 +227,10 @@ class Connexion
 		int y1 = reader.nextInt();
 		int x2 = reader.nextInt();
 		int y2 = reader.nextInt();
-		//plat_.calculeDistance(x1,y1,x2,y2);
-		dijkstra_.run(plat_, x1, y1, x2, y2);
-		//int min[] = new int[3];
-		//min = plat_.dijkstra(x1, y1, x2, y2);
-		//System.out.println("Nombres de coups min pour aller de ("+x1+","+y1+") en ("+x2+","+y2+") : " + min[0]);
+
+		int min = dijkstra_.run(plat_, x1, y1, x2, y2);
+
+		System.out.println("Nombres de coups min pour aller de ("+x1+","+y1+") en ("+x2+","+y2+") : " + min);
 	}
 
 	/**
