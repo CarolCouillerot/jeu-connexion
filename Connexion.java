@@ -7,7 +7,7 @@ class Connexion
 	private Plateau plat_;
 	private int taille_;
 	private Dijsktra dijkstra_;
-	private IA ia_;
+	private IA ia_, ia2_;
 	private Case[] joueur_;
 	private int dernierX_;
 	private int dernierY_;
@@ -28,12 +28,18 @@ class Connexion
 		taille_ = taillePlateau;
 		dijkstra_ = new Dijsktra(taillePlateau);
 		ia_ = new IABasique('R', plat_);
+		ia2_ = new IABasique('B', plat_);
 		joueur_ = plat_.getEtoile();
 		max_ = 1;
 		nbCasesVides_ = taille_*taille_ - 2*k_;
 		gagnant_ = 'E'; // egalité
 	}
 
+	public void setIA(IA ia, int num) 
+	{
+		if(num == 1) ia_ = ia;
+		else ia2_ = ia;
+	}
 	/**
 	 * @brief      
 	 * @entrées   
@@ -41,6 +47,11 @@ class Connexion
 	**/  
 	public static void main(String[] args) 
 	{
+		/* Mode IA contre IA : taille 9, 3 étoiles */
+		Connexion game = new Connexion(9, 3);
+		game.joueOrdiContreOrdi();
+
+		/* Mode Interactif 
 		Scanner reader = new Scanner(System.in);
 		System.out.println("Taille du plateau : ");
 		int taille = reader.nextInt();
@@ -54,7 +65,9 @@ class Connexion
 		joueur[1] = 'R';
 
 		game.menuMode(reader, game, joueur);
+		*/
 	}
+
 
 	/**
 	 * @brief      
@@ -67,6 +80,29 @@ class Connexion
 
 		res = ia_.mettrePion(plat_, dijkstra_);
 		plat_.ajoutePion(ia_.color(), res[0], res[1]);
+	}
+
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/  
+	public void tourIA(int num) 
+	{
+		if(num == 0) 
+		{
+			int res[] = new int[2];
+
+			res = ia_.mettrePion(plat_, dijkstra_);
+			plat_.ajoutePion(ia_.color(), res[0], res[1]);
+		}
+		else 
+		{
+			int res[] = new int[2];
+
+			res = ia2_.mettrePion(plat_, dijkstra_);
+			plat_.ajoutePion(ia2_.color(), res[0], res[1]);			
+		}
 	}
 
 	/**
@@ -99,9 +135,9 @@ class Connexion
 
 		switch(choix) 
 		{
-			case 1: joueDeuxHumains(reader, co, j);
+			case 1: joueDeuxHumains(reader, j);
 				break;
-			case 2: joueOrdiHumain(reader, co, j);
+			case 2: joueOrdiHumain(reader, j);
 				break;
 			default: System.out.println("erreur.");
 				menuMode(reader, co, j);
@@ -306,7 +342,7 @@ class Connexion
 	}
 
 
-	public void joueDeuxHumains(Scanner reader, Connexion co, char [] j)
+	public void joueDeuxHumains(Scanner reader, char [] j)
 	{
 		int numJoueur = 0;
 		int menu;
@@ -315,7 +351,7 @@ class Connexion
 
 		while (!gameOver)
 		{
-			co.afficherPlateau();
+			afficherPlateau();
 
 			if (numJoueur == 0)
 				couleur = "bleu";
@@ -325,7 +361,7 @@ class Connexion
 			System.out.println("*********************************************************************");
 			System.out.println("Vous êtes en " + couleur + ", c'est votre tour de jouer. \nQue souhaitez vous faire ?");			
 			System.out.println("*********************************************************************");
-			menu = co.menu(reader, j[numJoueur]);
+			menu = menu(reader, j[numJoueur]);
 
 			if (menu == 1)
 			{
@@ -335,10 +371,10 @@ class Connexion
 					numJoueur = (numJoueur+1)%2;
 			}	
 		}
-		co.afficherPlateau();
+		afficherPlateau();
 	}
 	
-	public void joueOrdiHumain(Scanner reader, Connexion co, char [] j)
+	public void joueOrdiHumain(Scanner reader, char [] j)
 	{
 		int numJoueur = 0;
 		int menu;
@@ -346,7 +382,7 @@ class Connexion
 
 		while (!gameOver)
 		{
-			co.afficherPlateau();
+			afficherPlateau();
 
 			if(numJoueur == 0) 
 			{
@@ -355,7 +391,7 @@ class Connexion
 				System.out.println("Vous êtes en bleu, c'est votre tour de jouer. \nQue souhaitez vous faire ?");	
 				System.out.println("*********************************************************************");
 				
-				menu = co.menu(reader, j[numJoueur]);
+				menu = menu(reader, j[numJoueur]);
 				
 				if (menu == 1)
 				{
@@ -367,7 +403,7 @@ class Connexion
 			}
 			else 
 			{
-				co.tourIA();
+				tourIA();
 
 				if (isGameOver(j[numJoueur]))
 					gameOver = true;
@@ -375,7 +411,23 @@ class Connexion
 					numJoueur = (numJoueur+1)%2;
 			}
 		}
-		co.afficherPlateau();
+		afficherPlateau();
+	}
+
+	public void joueOrdiContreOrdi()
+	{
+		int numJoueur = 0;
+		boolean gameOver = false;
+
+		for(int i = 0; i < 10; ++i)
+		{
+			afficherPlateau();
+
+			tourIA(numJoueur);
+
+			numJoueur = (numJoueur+1)%2;
+		}
+		afficherPlateau();
 	}
 
 	public void abandonner(char joueur) 
@@ -451,4 +503,9 @@ class Connexion
 			System.out.println("******************************************************");
 		}
 	}
+
+	public void jeuDessai() {
+
+	}
 }
+
