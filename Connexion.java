@@ -136,7 +136,7 @@ class Connexion
 				break;
 			case 3: existeChemin(reader, joueur);
 				break;
-			case 4: distance(reader,joueur);
+			case 4: relierCasesMin(reader,joueur);
 				break;
 			case 5: nbEtoiles(reader,joueur);
 				break;
@@ -216,7 +216,7 @@ class Connexion
 	 * @entrées   
 	 * @sorties   
 	**/  
-	public void distance(Scanner reader, char joueur) 
+	public void relierCasesMin(Scanner reader, char joueur) 
 	{
 		System.out.print("La première saisie correspond aux lignes, la seconde aux colonnes.\n");				
 		System.out.println("Existe chemin : entrer la coordonnées de la case de départ puis de la case d'arrivée.");
