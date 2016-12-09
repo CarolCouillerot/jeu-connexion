@@ -267,7 +267,7 @@ class Plateau
 	 * @entrées   
 	 * @sorties   
 	**/  
-	public void afficherScore() 
+	public void afficheScores() 
 	{
 		int etoileBleue = 0;
 		int etoileRouge = 0;
@@ -302,6 +302,8 @@ class Plateau
 		
 		if (c1.getCouleur() == c2.getCouleur()) 
 		{
+			c1 = classe(c1.getX(), c1.getY());
+			c2 = classe(c2.getX(), c2.getY());
 			if (c1.getXParent() == c2.getXParent() && c1.getYParent() == c2.getYParent())
 				res = true;
 		}

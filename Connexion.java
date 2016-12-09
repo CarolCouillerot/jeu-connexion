@@ -141,7 +141,7 @@ class Connexion
 				break;
 			case 5: nbEtoiles(reader,joueur);
 				break;
-			case 6: afficherScores();
+			case 6: afficheScores();
 				break;
 			case 7: relieComposante(reader,joueur);
 				break;
@@ -252,7 +252,7 @@ class Connexion
 	 * @entrées   
 	 * @sorties   
 	**/  
-	public void afficherScores() { plat_.afficherScore(); }
+	public void afficheScores() { plat_.afficheScores(); }
 
 	/**
 	 * @brief      
