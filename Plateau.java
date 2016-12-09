@@ -80,6 +80,7 @@ class Plateau
 			plateau_[x[i]][y[i]].setCouleur(col);
 			plateau_[x[i]][y[i]].setTypeCase('*');
 			plateau_[x[i]][y[i]].addEtoiles(1);
+			System.out.println("etoile en " + x[i] + "," + y[i]);
 		}
 	}
 
@@ -338,10 +339,16 @@ class Plateau
 	**/  
 	public void afficher() 
 	{
+		System.out.print("   ");
+		for(int i = 0; i < taille_; ++i) 
+		{
+			System.out.print(i + " ");
+		}
 		System.out.println();
-		
+
 		for (int i = 0; i < taille_; ++i) 
 		{
+			System.out.print(i + " |");
 			for (int j = 0; j < taille_; ++j) 
 			{
 				if(plateau_[i][j].getCouleur() == 'B')

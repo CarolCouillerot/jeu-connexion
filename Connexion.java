@@ -300,7 +300,9 @@ class Connexion
 			else
 				couleur = "rouge";
 
+			System.out.println("*********************************************************************");
 			System.out.println("Vous êtes en " + couleur + ", c'est votre tour de jouer. \nQue souhaitez vous faire ?");			
+			System.out.println("*********************************************************************");
 			co.menu(reader, j[numJoueur]);
 			co.afficherPlateau();
 			numJoueur = (numJoueur+1)%2;
@@ -317,7 +319,10 @@ class Connexion
 		{
 			if(numJoueur == 0) 
 			{
-				System.out.println("Vous êtes en bleu, c'est votre tour de jouer. \nQue souhaitez vous faire ?");
+
+				System.out.println("*********************************************************************");
+				System.out.println("Vous êtes en bleu, c'est votre tour de jouer. \nQue souhaitez vous faire ?");	
+				System.out.println("*********************************************************************");
 				co.menu(reader, j[numJoueur]);
 			}
 			else 
