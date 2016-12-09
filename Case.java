@@ -24,6 +24,10 @@ class Case
 	// contient le bon nombre d'étoiles dans la composante
 	private int etoile_;
 
+	// Stocke la hauteur de la composante dans laquelle est cette case
+	// Seule la racine contient de la composante contient la bonne hauteur
+	private int hauteur_;
+
 	/**
 	 * @brief      
 	 * @entrées   
@@ -38,6 +42,7 @@ class Case
 		couleur_ = col;
 		typeCase_ = type;
 		etoile_ = etoiles;
+		hauteur_ = 0;
 	}
 
 	/**
@@ -138,4 +143,19 @@ class Case
 	 * @sorties   
 	**/  
 	public void addEtoiles(int n) { etoile_ += n; }
+
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/
+	public int getHauteur() { return hauteur_; }
+
+	/**
+	 * @brief      
+	 * @entrées   
+	 * @sorties   
+	**/
+	public void addHauteur(int h) { hauteur_ += h; }
+
 }

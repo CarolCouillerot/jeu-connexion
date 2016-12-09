@@ -34,8 +34,7 @@ class Plateau
 			}
 		}
 
-		genererPositionDebut('B');
-		genererPositionDebut('R');
+		genererPositionDebut();
 	}
 
 	/**
@@ -43,13 +42,13 @@ class Plateau
 	 * @entrées   
 	 * @sorties   
 	**/  
-	private void genererPositionDebut(char col) 
+	private void genererPositionDebut() 
 	{
 		Random rand = new Random();
-		int x[] = new int[k_];
-		int y[] = new int[k_];
+		int x[] = new int[2*k_];
+		int y[] = new int[2*k_];
 		
-		for (int i = 0; i < k_; ++i) 
+		for (int i = 0; i < 2*k_; ++i) 
 		{
 			x[i] = rand.nextInt(taille_);
 			y[i] = rand.nextInt(taille_);
@@ -61,9 +60,9 @@ class Plateau
 		{
 			coordDistincte = true;
 			
-			for (int i = 0; i < k_- 1; ++i)
+			for (int i = 0; i < 2*k_- 1; ++i)
 			{
-				for (int j = i + 1; j < k_; ++j) 
+				for (int j = i + 1; j < 2*k_; ++j) 
 				{
 					if (x[i] == x[j] && y[i] == y[j]) 
 					{
@@ -77,10 +76,13 @@ class Plateau
 
 		for (int i = 0; i < k_; ++i) 
 		{
-			plateau_[x[i]][y[i]].setCouleur(col);
+			plateau_[x[i]][y[i]].setCouleur('B');
 			plateau_[x[i]][y[i]].setTypeCase('*');
 			plateau_[x[i]][y[i]].addEtoiles(1);
-			System.out.println("etoile en " + x[i] + "," + y[i]);
+
+			plateau_[x[i+k_]][y[i+k_]].setCouleur('R');
+			plateau_[x[i+k_]][y[i+k_]].setTypeCase('*');
+			plateau_[x[i+k_]][y[i+k_]].addEtoiles(1);
 		}
 	}
 
@@ -192,9 +194,10 @@ class Plateau
 	{
 		int taille1 = taille(c1);
 		int taille2 = taille(c2);
-		
+
 		c1 = classe(c1.getX(), c1.getY());
 		c2 = classe(c2.getX(), c2.getY());
+
 
 		if (taille1 < taille2) 
 		{
@@ -339,7 +342,7 @@ class Plateau
 	**/  
 	public void afficher() 
 	{
-		System.out.print("   ");
+		System.out.print("    ");
 		for(int i = 0; i < taille_; ++i) 
 		{
 			System.out.print(i + " ");
@@ -348,7 +351,10 @@ class Plateau
 
 		for (int i = 0; i < taille_; ++i) 
 		{
-			System.out.print(i + " |");
+			System.out.print(i + " ");
+			if(i < 10) System.out.print(" ");
+			System.out.print("|");
+
 			for (int j = 0; j < taille_; ++j) 
 			{
 				if(plateau_[i][j].getCouleur() == 'B')

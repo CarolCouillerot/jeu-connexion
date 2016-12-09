@@ -9,6 +9,12 @@ class Connexion
 	private Dijsktra dijkstra_;
 	private IA ia_;
 	private Case[] joueur_;
+	private int dernierX_;
+	private int dernierY_;
+	private int max_;
+	private char gagnant_;
+	private int nbCasesVides_;
+
 
 	/**
 	 * @brief      
@@ -23,6 +29,9 @@ class Connexion
 		dijkstra_ = new Dijsktra(taillePlateau);
 		ia_ = new IABasique('R', plat_);
 		joueur_ = plat_.getEtoile();
+		max_ = 1;
+		nbCasesVides_ = taille_*taille_ - 2*k_;
+		gagnant_ = 'E'; // egalité
 	}
 
 	/**
@@ -104,7 +113,7 @@ class Connexion
 	 * @entrées   
 	 * @sorties   
 	**/  
-	public void menu(Scanner reader, char joueur) 
+	public int menu(Scanner reader, char joueur) 
 	{
 		System.out.println("1. Ajouter un pion");
 		System.out.println("2. Afficher composante");
@@ -114,13 +123,15 @@ class Connexion
 		System.out.println("6. Score des joueurs");
 		System.out.println("7. Relie composante ?");
 		System.out.println("8. EvaluerCase1 ?");
+		System.out.println("9. Abandonner");
 		System.out.println("Votre choix : ");
 
 		int choix = reader.nextInt();
 
 		switch(choix) 
 		{
-			case 1: ajouterPion(reader, joueur);
+			case 1: if (!ajouterPion(reader, joueur)) choix = -1;
+					else --nbCasesVides_;
 				break;
 			case 2: afficherComposante(reader, joueur);
 				break;
@@ -136,9 +147,12 @@ class Connexion
 				break;
 			case 8: evaluerCase1(reader,joueur);
 				break;
+			case 9: abandonner(joueur);
 			default: System.out.println("erreur.");
 				menu(reader, joueur);
 		}
+
+		return choix;
 	}
 
 	/**
@@ -146,13 +160,20 @@ class Connexion
 	 * @entrées   
 	 * @sorties   
 	**/  
-	public void ajouterPion(Scanner reader, char joueur) 
+	public boolean ajouterPion(Scanner reader, char joueur) 
 	{
 		System.out.print("La première saisie correspond aux lignes, la seconde aux colonnes.\n");		
 		System.out.print("Entrez la coordonnée du pion à mettre : ");
 		int x = reader.nextInt();
 		int y = reader.nextInt();
-		plat_.ajoutePion(joueur,x,y);
+		if (plat_.ajoutePion(joueur, x, y))
+		{
+			dernierX_ = x;
+			dernierY_ = y;
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -289,12 +310,14 @@ class Connexion
 	public void joueDeuxHumains(Scanner reader, Connexion co, char [] j)
 	{
 		int numJoueur = 0;
+		int menu;
 		String couleur;
+		boolean gameOver = false;
 
-		co.afficherPlateau();
-
-		for (int i = 0; i < 20; ++i) 
+		while (!gameOver)
 		{
+			co.afficherPlateau();
+
 			if (numJoueur == 0)
 				couleur = "bleu";
 			else
@@ -303,34 +326,130 @@ class Connexion
 			System.out.println("*********************************************************************");
 			System.out.println("Vous êtes en " + couleur + ", c'est votre tour de jouer. \nQue souhaitez vous faire ?");			
 			System.out.println("*********************************************************************");
-			co.menu(reader, j[numJoueur]);
-			co.afficherPlateau();
-			numJoueur = (numJoueur+1)%2;
+			menu = co.menu(reader, j[numJoueur]);
+
+			if (menu == 1)
+			{
+				if (isGameOver(j[numJoueur]))
+					gameOver = true;
+				else
+					numJoueur = (numJoueur+1)%2;
+			}	
 		}
+		co.afficherPlateau();
 	}
 	
 	public void joueOrdiHumain(Scanner reader, Connexion co, char [] j)
 	{
 		int numJoueur = 0;
+		int menu;
+		boolean gameOver = false;
 
-		co.afficherPlateau();
-
-		for (int i = 0; i < 20; ++i) 
+		while (!gameOver)
 		{
+			co.afficherPlateau();
+
 			if(numJoueur == 0) 
 			{
 
 				System.out.println("*********************************************************************");
 				System.out.println("Vous êtes en bleu, c'est votre tour de jouer. \nQue souhaitez vous faire ?");	
 				System.out.println("*********************************************************************");
-				co.menu(reader, j[numJoueur]);
+				
+				menu = co.menu(reader, j[numJoueur]);
+				
+				if (menu == 1)
+				{
+					if (isGameOver(j[numJoueur]))
+						gameOver = true;
+					else
+						numJoueur = (numJoueur+1)%2;
+				}				
 			}
 			else 
 			{
 				co.tourIA();
+
+				if (isGameOver(j[numJoueur]))
+					gameOver = true;
+				else
+					numJoueur = (numJoueur+1)%2;
 			}
-			co.afficherPlateau();
-			numJoueur = (numJoueur+1)%2;
+		}
+		co.afficherPlateau();
+	}
+
+	public void abandonner(char joueur) 
+	{
+		String perdant, gagnant;
+		if(joueur == 'B')
+		{
+			perdant = "Bleu";
+			gagnant = "Rouge";
+		}
+		else
+		{
+			perdant = "Rouge";
+			gagnant = "Bleu";
+		}
+
+		System.out.println("\n\n*****************************************************");
+		System.out.println("Le joueur " + perdant + " abandonne. Le joueur " + gagnant + " gagne");
+		System.out.println("******************************************************");
+	}
+
+	public boolean isGameOver(char joueur) 
+	{
+		boolean over = false;
+
+		if (plat_.relieComposantes(joueur, dernierX_, dernierY_))
+		{
+			if (plat_.nombreEtoiles(plat_.getCase(dernierX_, dernierY_)) > max_) 
+			{
+				max_ = plat_.nombreEtoiles(plat_.getCase(dernierX_, dernierY_));
+				gagnant_ = joueur;
+			}
+
+			if (plat_.nombreEtoiles(plat_.getCase(dernierX_, dernierY_)) == k_)
+			{
+				gagner(joueur);
+				over = true;
+			}
+		}
+		if (nbCasesVides_ <= 0) 
+		{
+			gagner(gagnant_);
+			over = true;
+		}
+
+		return over;
+	}
+
+	public void gagner(char joueur) 
+	{
+		String perdant, gagnant;
+		if(joueur == 'R')
+		{
+			perdant = "Bleu";
+			gagnant = "Rouge";
+		}
+		else
+		{
+			perdant = "Rouge";
+			gagnant = "Bleu";
+		}
+			
+		if(joueur == 'E') 
+		{
+			System.out.println("\n\n*****************************************************");
+			System.out.println("Le joueur " + gagnant + " gagne la partie en reliant toutes ses étoiles.");
+			System.out.println("******************************************************");
+		}
+		else
+		{
+			System.out.println("\n\n*****************************************************");
+			System.out.println("Les joueur sont à égalité.");
+			System.out.println("******************************************************");
 		}
 	}
 }
